@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>houdini/houlogo.png</file>
+  </qresource>
+</RCC>
