@@ -159,8 +159,17 @@ class HoudiniPane(BaseLauncherPane):
 			return
 
 		filepath = self.__houconf.getClosestVersionPath(conf.houVer())
-		filepath = os.path.join(filepath, 'bin', '.'.join((self.ui.binNameComboBox.currentText(), 'exe')))  # TODO:bin name should be part of config
-		# TODO: that exe makes this shit pretty non cross-platform...
+		binname=self.ui.binNameComboBox.currentText()
+		filename=None
+		try:
+			filenamecandidates=[x for x in os.listdir(os.path.join(filepath, 'bin')) if os.path.splitext(x)[0]==binname]
+			if(len(filenamecandidates)==0):raise RuntimeError('no binary found')
+			elif(len(filenamecandidates)>1):raise RuntimeError('multiple matching files to launch found')
+			filename=filenamecandidates[0]
+		except Exception as e:
+			print("HoudiniPane: launch failed: %s"%e.message)
+			return
+		filepath = os.path.join(filepath, 'bin', filename)
 		# now set env
 		env = os.environ.copy()
 		envtokendict={'PWD':os.path.dirname(self.__project.filename())}
