@@ -168,7 +168,7 @@ class HoudiniPane(BaseLauncherPane):
 			env[str(name)] = str(val) #just so no unicode
 		print(filepath)
 		pprint(env)
-		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env)
+		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=os.path.dirname(filepath))
 
 	@Slot()
 	def projectDialogSelected(self):
