@@ -125,7 +125,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.__project.configAdded.connect(self.configAdded)
 		self.__project.configRemoved.connect(self.configRemoved)
 
-	def setConfig(self, config):  # TODO: make all UI fields be set by callbacks ?
+	def setConfig(self, config):  # all UI is driven by model callbacks after config is set
 		'''
 		set UI to show config
 		:param config: ProjectConfig or None
