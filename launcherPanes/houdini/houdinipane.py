@@ -69,7 +69,7 @@ class HoudiniPane(BaseLauncherPane):
 		# self.ui.envTableView.horizontalHeader().setStretchLastSection(True)
 		# self.ui.envTableView.verticalHeader().setStretchLastSection(False)
 
-		self.__projectDialog=projectdialog.ProjectDialog(self)
+		self.__projectDialog=projectdialog.ProjectDialog('houdini',self)
 		self.__projectDialog.accepted.connect(self.projectDialogSelected)
 
 		self.__houconf = HoudiniConfig()
@@ -99,7 +99,7 @@ class HoudiniPane(BaseLauncherPane):
 
 		# set default project
 		settingspath = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
-		defProject = Project(os.path.join(settingspath,'default.project'))
+		defProject = Project(os.path.join(settingspath,'default.project')) #TODO: he's not deleted when project's changed, and yet we dont keep a ref to it
 		if(len(defProject.configs())==0):
 			defProject.addConfig(ProjectConfig('default', self.__houconf.getClosestVersion()))
 			defProject.sync()
@@ -134,9 +134,13 @@ class HoudiniPane(BaseLauncherPane):
 		oldState = self.__blockUICallbacks
 		self.__blockUICallbacks = True
 		try:
-			# setting version ui
+			# setting down
+			oldconfig=self.ui.envTableView.model()
+			if(oldconfig is not None):oldconfig.otherDataChanged.disconnect()
+			# setting up
 			self.ui.envTableView.setModel(None)
 			if (config is not None):
+				config.otherDataChanged.connect(self.otherDataFromConfig)
 				self.otherDataFromConfig(config.allOtherData())
 				self.ui.envTableView.setModel(config)
 		except Exception as e:
@@ -176,7 +180,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.projectPathChanged()
 
 	# Model-to-UI callbacks
-	@Slot(str, object)
+	@Slot(dict)
 	def otherDataFromConfig(self, dictdata):
 		self.__blockUICallbacks = True
 		# if u want any UI-to-model callbacks to happen - think twice and modify model directly
