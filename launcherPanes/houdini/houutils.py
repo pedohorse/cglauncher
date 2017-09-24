@@ -4,7 +4,7 @@ import re
 
 
 def locateHoudinies(extraPathList=None):
-	commonpaths = [r"C:\Program Files\Side Effects Software"]
+	commonpaths = [r"C:\Program Files\Side Effects Software",r"/opt",r"/Applications"]
 	if(extraPathList is not None):commonpaths+=extraPathList
 
 	houdinies = {}
