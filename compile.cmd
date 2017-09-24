@@ -1,3 +1,3 @@
-c:\\python27\\python.exe C:\\Python27\\Scripts\\cxfreeze --include-modules=json --target-dir=dist\\cglauncher --base-name WIN32GUI main.py
-xcopy launcherPanes .\dist\cglauncher\. /Y
-#TODO: make a py script that does it! fucking CMD is fucking fuck
+c:\\python27\\python.exe C:\\Python27\\Scripts\\cxfreeze --include-modules=json --target-dir=dist\\cglauncher --icon=icon.ico --base-name WIN32GUI main.py
+xcopy launcherPanes dist\cglauncher\launcherPanes /E /Y
+c:\\python27\\python.exe postsetup.py

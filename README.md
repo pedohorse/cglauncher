@@ -7,3 +7,7 @@ extendable launcher for common pipeline cg applicatinos (supports only Houdini f
 * run **pythonw main.py** to start without console output
   * on Windows - there's file start_the_launcher.cmd that does exactly that
 * run **python main.py** to start with console output
+
+
+# contributions
+icon icon.ico is licensed under CC 4.0, created by Steve Lianardo
