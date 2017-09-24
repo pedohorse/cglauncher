@@ -1,4 +1,6 @@
 <RCC>
-  <qresource prefix="icons"/>
+  <qresource prefix="icons">
+    <file>icon.ico</file>
+  </qresource>
   <qresource prefix="uis"/>
 </RCC>
