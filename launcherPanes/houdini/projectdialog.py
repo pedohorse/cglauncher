@@ -11,9 +11,9 @@ from pprint import pprint
 
 
 class ProjectListModel(QAbstractListModel):
-	def __init__(self,parent):
+	def __init__(self,basename,parent):
 		super(ProjectListModel,self).__init__(parent)
-		self.__settingsfile = os.path.join(QDesktopServices.storageLocation(QDesktopServices.DataLocation), r'projectList')
+		self.__settingsfile = os.path.join(QDesktopServices.storageLocation(QDesktopServices.DataLocation), '.'.join((basename,'projectlist')))
 		self.__data=[]
 		try:
 			with open(self.__settingsfile,"r") as f:
@@ -26,13 +26,16 @@ class ProjectListModel(QAbstractListModel):
 		lastid=len(self.__data)
 		if(len(projData)<2):raise RuntimeError("improper projData")
 		self.beginInsertRows(QModelIndex(),lastid,lastid)
-		try:#TODO: better keep all checks before try or we can end up endInsertRows with no actual rows added
+		try:
 			self.__data.append([projData[0],projData[1]])
 		finally:
 			self.endInsertRows()
 
-			with open(self.__settingsfile,'w') as f:
-				json.dump(self.__data,f)
+			try:
+				with open(self.__settingsfile,'w') as f:
+					json.dump(self.__data,f)
+			except:
+				print("Project List: couldnt save recents")
 
 
 	def removeRows(self,row,count,parent=None):
@@ -43,6 +46,11 @@ class ProjectListModel(QAbstractListModel):
 		self.beginRemoveRows(parent,row,row+count-1)
 		self.__data=self.__data[:row]+self.__data[row+count:]
 		self.endRemoveRows()
+		try:
+			with open(self.__settingsfile, 'w') as f:
+				json.dump(self.__data, f)
+		except:
+			print("Project List: couldnt save recents")
 		return True
 
 
@@ -60,10 +68,11 @@ class ProjectListModel(QAbstractListModel):
 
 
 class ProjectDialog(QDialog):
-	def __init__(self,parent=None):
+	def __init__(self,basename='default',parent=None):
 		super(ProjectDialog,self).__init__(parent)
 
 		self.__lastPath=''
+		self.__basename=basename
 
 		self.ui=projectDialog_ui.Ui_projectSelectionDialog()
 		self.ui.setupUi(self)
@@ -79,7 +88,7 @@ class ProjectDialog(QDialog):
 		self.ui.fileTreeView.setColumnWidth(0, 400)
 
 		#
-		self.__recentProjectsModel=ProjectListModel(self)
+		self.__recentProjectsModel=ProjectListModel(basename,self)
 		self.ui.recentProjectsListView.setModel(self.__recentProjectsModel)
 
 		# signals

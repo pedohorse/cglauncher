@@ -69,7 +69,7 @@ class HoudiniPane(BaseLauncherPane):
 		# self.ui.envTableView.horizontalHeader().setStretchLastSection(True)
 		# self.ui.envTableView.verticalHeader().setStretchLastSection(False)
 
-		self.__projectDialog=projectdialog.ProjectDialog(self)
+		self.__projectDialog=projectdialog.ProjectDialog('houdini',self)
 		self.__projectDialog.accepted.connect(self.projectDialogSelected)
 
 		self.__houconf = HoudiniConfig()
@@ -99,7 +99,7 @@ class HoudiniPane(BaseLauncherPane):
 
 		# set default project
 		settingspath = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
-		defProject = Project(os.path.join(settingspath,'default.project'))
+		defProject = Project(os.path.join(settingspath,'default.project')) #TODO: he's not deleted when project's changed, and yet we dont keep a ref to it
 		if(len(defProject.configs())==0):
 			defProject.addConfig(ProjectConfig('default', self.__houconf.getClosestVersion()))
 			defProject.sync()
@@ -125,7 +125,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.__project.configAdded.connect(self.configAdded)
 		self.__project.configRemoved.connect(self.configRemoved)
 
-	def setConfig(self, config):  # TODO: make all UI fields be set by callbacks ?
+	def setConfig(self, config):  # all UI is driven by model callbacks after config is set
 		'''
 		set UI to show config
 		:param config: ProjectConfig or None
@@ -134,9 +134,13 @@ class HoudiniPane(BaseLauncherPane):
 		oldState = self.__blockUICallbacks
 		self.__blockUICallbacks = True
 		try:
-			# setting version ui
+			# setting down
+			oldconfig=self.ui.envTableView.model()
+			if(oldconfig is not None):oldconfig.otherDataChanged.disconnect()
+			# setting up
 			self.ui.envTableView.setModel(None)
 			if (config is not None):
+				config.otherDataChanged.connect(self.otherDataFromConfig)
 				self.otherDataFromConfig(config.allOtherData())
 				self.ui.envTableView.setModel(config)
 		except Exception as e:
@@ -155,8 +159,17 @@ class HoudiniPane(BaseLauncherPane):
 			return
 
 		filepath = self.__houconf.getClosestVersionPath(conf.houVer())
-		filepath = os.path.join(filepath, 'bin', '.'.join((self.ui.binNameComboBox.currentText(), 'exe')))  # TODO:bin name should be part of config
-		# TODO: that exe makes this shit pretty non cross-platform...
+		binname=self.ui.binNameComboBox.currentText()
+		filename=None
+		try:
+			filenamecandidates=[x for x in os.listdir(os.path.join(filepath, 'bin')) if os.path.splitext(x)[0]==binname]
+			if(len(filenamecandidates)==0):raise RuntimeError('no binary found')
+			elif(len(filenamecandidates)>1):raise RuntimeError('multiple matching files to launch found')
+			filename=filenamecandidates[0]
+		except Exception as e:
+			print("HoudiniPane: launch failed: %s"%e.message)
+			return
+		filepath = os.path.join(filepath, 'bin', filename)
 		# now set env
 		env = os.environ.copy()
 		envtokendict={'PWD':os.path.dirname(self.__project.filename())}
@@ -168,7 +181,7 @@ class HoudiniPane(BaseLauncherPane):
 			env[str(name)] = str(val) #just so no unicode
 		print(filepath)
 		pprint(env)
-		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env)
+		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=os.path.dirname(filepath))
 
 	@Slot()
 	def projectDialogSelected(self):
@@ -176,7 +189,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.projectPathChanged()
 
 	# Model-to-UI callbacks
-	@Slot(str, object)
+	@Slot(dict)
 	def otherDataFromConfig(self, dictdata):
 		self.__blockUICallbacks = True
 		# if u want any UI-to-model callbacks to happen - think twice and modify model directly
