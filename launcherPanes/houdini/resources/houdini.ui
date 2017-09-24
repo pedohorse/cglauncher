@@ -197,7 +197,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0,0,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0,0,0,1">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -236,6 +236,27 @@
          </property>
          <property name="text">
           <string>new</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="renameConfigPushButton">
+         <property name="maximumSize">
+          <size>
+           <width>48</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton#renameConfigPushButton{
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}</string>
+         </property>
+         <property name="text">
+          <string>rename</string>
          </property>
         </widget>
        </item>
@@ -335,6 +356,7 @@
  </widget>
  <resources>
   <include location="houdini.qrc"/>
+  <include location="../../../../../.designer/backup/houdini.qrc"/>
  </resources>
  <connections/>
  <designerdata>

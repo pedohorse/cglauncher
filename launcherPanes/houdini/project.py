@@ -3,7 +3,7 @@ from PySide.QtCore import *
 from PySide.QtGui import *
 
 import json
-
+import re
 
 
 
@@ -45,8 +45,30 @@ class Project(QObject):
 				except:
 					raise RuntimeError("Project: cannot access the project file")
 
+	def makeUniqueConfigName(self,name):
+		newname=name
+		good=False
+		for x in xrange(9999): #we try to resolve name collisions till it's resolved or till we hit trying limit
+			if(len([x for x in self.__configs if x.name()==newname])>0):
+				#so we have a name collision
+				try:
+					match=re.match(r'((\D*\d*)*(?<=\D)|^)(\d*)$',newname)
+					if(match is not None):
+						id=0
+						if(match.group(3)!=''):id=int(match.group(3))
+						newname=match.group(1)+str(id+1)
+				except Exception as e:
+					print(e.message)
+					raise ConfigNameCollisionError("unique config name could not be found")
+			else:
+				good=True
+				break
+
+		if(not good):raise ConfigNameCollisionError("unique config name could not be found")
+		return newname
+
 	def addConfig(self,newConfig):
-		if(len([x for x in self.__configs if x.name()==newConfig.name()])):raise ConfigNameCollisionError("configs with same names are not allowed")
+		newConfig.rename(self.makeUniqueConfigName(newConfig.name()))
 		self.__configs.append(newConfig)
 		newConfig.dataChanged.connect(self.configChanged)
 		self.configAdded.emit(newConfig)
@@ -54,6 +76,7 @@ class Project(QObject):
 	def removeConfig(self,name):
 		if(name not in self.configs()):return
 		self.__configs=[x for x in self.__configs if x.name()!=name]
+		#TODO: need to force deleteLater on those configs!
 		self.configRemoved.emit(name)
 
 	def configs(self):

@@ -89,6 +89,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.houVersionComboBox.currentIndexChanged[int].connect(self.uiHouVerChanged)
 		self.ui.binNameComboBox.editTextChanged.connect(self.binaryChanged)
 		self.ui.newConfigPushButton.clicked.connect(self.newConfigButtonPressed)
+		self.ui.renameConfigPushButton.clicked.connect(self.renameConfigButtonPressed)
 		self.ui.delConfigPushButton.clicked.connect(self.configRemoveButtonPressed)
 		self.ui.launchPushButton.clicked.connect(self.launchButtonPressed)
 
@@ -286,13 +287,23 @@ class HoudiniPane(BaseLauncherPane):
 	@Slot()
 	def newConfigButtonPressed(self):
 		if (self.__blockUICallbacks): return
-		name, good = QInputDialog.getText(self, 'enter name', 'you bastard')
+		name, good = QInputDialog.getText(self, 'new config', 'enter unique name')
 		if (not good): return
 		self.__project.addConfig(ProjectConfig(name, tuple(self.ui.houVersionComboBox.itemData(self.ui.houVersionComboBox.currentIndex()))))
 
 	@Slot()
+	def renameConfigButtonPressed(self):
+		if (self.__blockUICallbacks): return
+		if (self.ui.configComboBox.count() == 0): return
+		oldname=self.ui.configComboBox.currentText()
+		newname, good = QInputDialog.getText(self, 'new config', 'enter unique name',text=oldname)
+		if (not good): return
+		self.__project.config(oldname).rename(self.__project.makeUniqueConfigName(newname))
+
+	@Slot()
 	def configRemoveButtonPressed(self):
 		if (self.__blockUICallbacks): return
+		if(self.ui.configComboBox.count()==0):return
 		# TODO: add popup
 		self.__project.removeConfig(self.ui.configComboBox.currentText())
 

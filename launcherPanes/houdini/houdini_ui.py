@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'houdini.ui'
 #
-# Created: Tue Sep 19 22:02:44 2017
+# Created: Sun Sep 24 21:36:23 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -116,6 +116,16 @@ class Ui_houdiniMenu(object):
 "}")
         self.newConfigPushButton.setObjectName("newConfigPushButton")
         self.horizontalLayout_3.addWidget(self.newConfigPushButton)
+        self.renameConfigPushButton = QtGui.QPushButton(houdiniMenu)
+        self.renameConfigPushButton.setMaximumSize(QtCore.QSize(48, 16777215))
+        self.renameConfigPushButton.setStyleSheet("QPushButton#renameConfigPushButton{\n"
+"    padding-right: 5px;\n"
+"    padding-left: 5px;\n"
+"    padding-top: 3px;\n"
+"    padding-bottom: 3px;\n"
+"}")
+        self.renameConfigPushButton.setObjectName("renameConfigPushButton")
+        self.horizontalLayout_3.addWidget(self.renameConfigPushButton)
         self.delConfigPushButton = QtGui.QPushButton(houdiniMenu)
         self.delConfigPushButton.setMaximumSize(QtCore.QSize(32, 16777215))
         self.delConfigPushButton.setStyleSheet("QPushButton#delConfigPushButton{\n"
@@ -129,7 +139,7 @@ class Ui_houdiniMenu(object):
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         self.horizontalLayout_3.setStretch(1, 1)
-        self.horizontalLayout_3.setStretch(4, 1)
+        self.horizontalLayout_3.setStretch(5, 1)
         self.gridLayout.addLayout(self.horizontalLayout_3, 2, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -171,7 +181,9 @@ class Ui_houdiniMenu(object):
         self.paneVersionLabel.setText(QtGui.QApplication.translate("houdiniMenu", "v 0.1", None, QtGui.QApplication.UnicodeUTF8))
         self.configLabel.setText(QtGui.QApplication.translate("houdiniMenu", "Configuration  :", None, QtGui.QApplication.UnicodeUTF8))
         self.newConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "new", None, QtGui.QApplication.UnicodeUTF8))
+        self.renameConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "rename", None, QtGui.QApplication.UnicodeUTF8))
         self.delConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "del", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("houdiniMenu", "environment variables", None, QtGui.QApplication.UnicodeUTF8))
 
+import houdini_rc
 import houdini_rc
