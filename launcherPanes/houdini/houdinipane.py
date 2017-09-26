@@ -99,8 +99,8 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.projectPathPushButton.clicked.connect(self.selectProjectClicked)
 
 		# set default project
-		settingspath = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
-		defProject = Project(os.path.join(settingspath,'default.project')) #TODO: he's not deleted when project's changed, and yet we dont keep a ref to it
+		self.__settingspath = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
+		defProject = Project(os.path.join(self.__settingspath,'default.project')) #TODO: he's not deleted when project's changed, and yet we dont keep a ref to it
 		if(len(defProject.configs())==0):
 			defProject.addConfig(ProjectConfig('default', self.__houconf.getClosestVersion()))
 			defProject.sync()
@@ -111,12 +111,12 @@ class HoudiniPane(BaseLauncherPane):
 		print("\n\n-----------------\n--NEW-PROJECT----\n-----------------")
 		if (self.__project is not None):
 			try:
-				self.__project.configAdded.disconnect()  # self.configAdded
-				self.__project.configRemoved.disconnect()  # self.configRemoved
+				self.__project.configAdded.disconnect(self.configAdded)  #
+				self.__project.configRemoved.disconnect(self.configRemoved)  #
 			# TOTO:figure out why disconnect sometimes doesnt work
-			except:
-				print("Pane: strange error during disconnecting")
-			self.__project.deleteLater()
+			except Exception as e:
+				print("Pane: strange error during disconnecting: %s"%e.message)
+			#self.__project.deleteLater()
 		self.setConfig(None)
 		self.__project = project
 
@@ -137,12 +137,15 @@ class HoudiniPane(BaseLauncherPane):
 		try:
 			# setting down
 			oldconfig=self.ui.envTableView.model()
-			if(oldconfig is not None):oldconfig.otherDataChanged.disconnect()
-			# setting up
+			if(oldconfig is not None):
+				oldconfig.otherDataChanged.disconnect(self.otherDataFromConfig)
+
 			self.ui.envTableView.setModel(None)
+			# setting up
 			if (config is not None):
 				config.otherDataChanged.connect(self.otherDataFromConfig)
 				self.otherDataFromConfig(config.allOtherData())
+
 				self.ui.envTableView.setModel(config)
 		except Exception as e:
 			print("shit happened: %s = %s" % (str(type(e)), str(e.message)))
@@ -190,7 +193,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.projectPathChanged()
 
 	# Model-to-UI callbacks
-	@Slot(dict)
+	@Slot()
 	def otherDataFromConfig(self, dictdata):
 		self.__blockUICallbacks = True
 		# if u want any UI-to-model callbacks to happen - think twice and modify model directly
@@ -211,14 +214,12 @@ class HoudiniPane(BaseLauncherPane):
 			if('name' in keys):
 				data = dictdata['name']
 				self.ui.configComboBox.setItemText(self.ui.configComboBox.currentIndex(),data)
-			#TODO: add all remaining keys
 		finally:
 			self.__blockUICallbacks = False
 
-	@Slot(ProjectConfig)
+	@Slot()
 	def configAdded(self, config):
 		self.ui.configComboBox.addItem(config.name())
-		# TODO: check name collision and rename
 		self.ui.configComboBox.setCurrentIndex(self.ui.configComboBox.count() - 1)
 
 	@Slot(str)
@@ -244,25 +245,43 @@ class HoudiniPane(BaseLauncherPane):
 		self.__projectPathChangedInProgress = True
 		try:
 			value = self.ui.projectPathLine.text()
-			# TODO: check if there are unsaved changed, popup
-			# print("textChanged")
 			self.ui.projectPathLine.clearFocus()
 			gooddir = os.path.isdir(value) and os.path.exists(value)
 			self.ui.saveProjectPushButton.setEnabled(gooddir or value=='')
 			if (gooddir):
-				# TODO: check if folder haz no project - ask if to keep current, or start from scratch
-				self.ui.bkgProjectLabel.setText(os.path.basename(value))
-				self.ui.bkgProjectLabel.adjustSize()
+				if(self.__project.syncNeeded()):
+					button=QMessageBox.question(self, 'unsaved changes', 'what to do?', buttons=QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
+					if(button==QMessageBox.Save):
+						self.__project.sync()
+					elif(button==QMessageBox.Cancel):
+						self.ui.projectPathLine.setText(os.path.dirname(self.__project.filename()))
+						return
+
 				projectfile = os.path.join(value, 'houdini.project')
 				if (os.path.isfile(projectfile)):
 					self.setProject(Project(projectfile))
 				else:
-					self.__project.setFilename(projectfile)
+					button=QMessageBox.question(self,'no project found','copy current project in this location?',buttons=QMessageBox.Yes|QMessageBox.RestoreDefaults|QMessageBox.Cancel)
+					if(button==QMessageBox.Yes):
+						self.__project.setFilename(projectfile)
+						self.__project.sync()
+					elif(button==QMessageBox.RestoreDefaults):
+						newproj=Project(os.path.join(self.__settingspath, 'default.project'))
+						newproj.setFilename(projectfile)
+						self.setProject(newproj)
+					else:
+						self.ui.projectPathLine.setText(os.path.dirname(self.__project.filename()))
+						return
 			elif(value==''):
-				settingspath = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
-				self.ui.bkgProjectLabel.setText('launcher')
-				self.setProject(Project(os.path.join(settingspath, 'default.project')))
+				self.setProject(Project(os.path.join(self.__settingspath, 'default.project')))
+			else:
+				self.ui.projectPathLine.setText(os.path.dirname(self.__project.filename()))
+				return
 		finally:
+			if(self.__project is not None):
+				filename=self.__project.filename()
+				self.ui.bkgProjectLabel.setText(os.path.basename(filename))
+				self.ui.bkgProjectLabel.adjustSize()
 			self.__projectPathChangedInProgress = False
 
 	@Slot(int)

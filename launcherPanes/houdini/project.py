@@ -71,12 +71,22 @@ class Project(QObject):
 		newConfig.rename(self.makeUniqueConfigName(newConfig.name()))
 		self.__configs.append(newConfig)
 		newConfig.dataChanged.connect(self.configChanged)
+		newConfig.columnsRemoved.connect(self.configChanged)
+		newConfig.columnsInserted.connect(self.configChanged)
 		self.configAdded.emit(newConfig)
 
 	def removeConfig(self,name):
 		if(name not in self.configs()):return
-		self.__configs=[x for x in self.__configs if x.name()!=name]
-		#TODO: need to force deleteLater on those configs!
+		todel=[]
+		for x in self.__configs:
+			if(x.name()==name):
+				todel.append(x)
+				x.dataChanged.disconnect(self.configChanged)
+				x.columnsRemoved.disconnect(self.configChanged)
+				x.columnsInserted.disconnect(self.configChanged)
+
+		self.__configs=[x for x in self.__configs if x.name()!=name]#TODO: use that todel list
+		#no deleteLater - let gc do it's job,
 		self.configRemoved.emit(name)
 
 	def configs(self):
@@ -118,6 +128,9 @@ class Project(QObject):
 		except KeyError as e:
 			raise RuntimeError("Config: Couldn't load config: unknown key %s"%(e.message,))
 
+	def syncNeeded(self):
+		return self.__saveNeeded
+
 	def sync(self):
 		if(self.__projectFileName is None):return
 		res={}
@@ -129,7 +142,8 @@ class Project(QObject):
 		#set state to synced
 		self.__saveNeeded=False
 
-
+	#Config callback
+	@Slot()
 	def configChanged(self):
 		self.__saveNeeded=True
 
@@ -139,9 +153,10 @@ class ProjectConfig(QAbstractTableModel):
 	__currentFormatVersion = (1, 0)
 
 	def __init__(self, name=None, ver=None, valuesDict=None):
+		super(ProjectConfig, self).__init__()
+
 		if(name is not None and ver is None or name is None and ver is not None or valuesDict is not None and (name is not None or ver is not None)):raise RuntimeError("either give name and ver, or valuesDict")
 
-		super(ProjectConfig,self).__init__()
 		self.__data=[]
 		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default'}
 		self.__formatVersion = ProjectConfig.__currentFormatVersion
