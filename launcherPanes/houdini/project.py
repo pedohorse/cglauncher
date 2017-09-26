@@ -85,7 +85,9 @@ class Project(QObject):
 				x.columnsRemoved.disconnect(self.configChanged)
 				x.columnsInserted.disconnect(self.configChanged)
 
-		self.__configs=[x for x in self.__configs if x.name()!=name]#TODO: use that todel list
+		for x in todel:
+			self.__configs.remove(x)
+				
 		#no deleteLater - let gc do it's job,
 		self.configRemoved.emit(name)
 
