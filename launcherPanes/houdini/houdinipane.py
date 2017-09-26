@@ -280,7 +280,7 @@ class HoudiniPane(BaseLauncherPane):
 		finally:
 			if(self.__project is not None):
 				filename=self.__project.filename()
-				self.ui.bkgProjectLabel.setText(os.path.basename(filename))
+				self.ui.bkgProjectLabel.setText(os.path.basename(os.path.normpath(os.path.dirname(filename))))
 				self.ui.bkgProjectLabel.adjustSize()
 			self.__projectPathChangedInProgress = False
 

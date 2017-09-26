@@ -87,7 +87,7 @@ class Project(QObject):
 
 		for x in todel:
 			self.__configs.remove(x)
-				
+
 		#no deleteLater - let gc do it's job,
 		self.configRemoved.emit(name)
 
