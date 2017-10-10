@@ -63,6 +63,11 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.bkgProjectLabel.adjustSize()
 		self.ui.bkgProjectLabel.lower()
 
+		self.__sceneFileModel=QFileSystemModel(self)
+		self.__sceneFileModel.setNameFilters(["*.hip","*.hipnc"])
+		#self.__sceneFileModel.setFilter(QDir.Files | QDir.Dirs | QDir.NoDotAndDotDot)
+		self.__sceneFileModel.setNameFilterDisables(False)
+
 
 		# self.ui.envTableView.setModel(EnvTableModel())
 		# self.ui.envTableView.verticalHeader().setMovable(True)
@@ -121,10 +126,23 @@ class HoudiniPane(BaseLauncherPane):
 		self.__project = project
 
 		self.ui.configComboBox.clear()
-		self.ui.configComboBox.addItems([conf for conf in self.__project.configs()])
+		self.ui.sceneFilesTreeView.setModel(None)
+		if (self.__project is not None):
+			self.ui.configComboBox.addItems([conf for conf in self.__project.configs()])
 
-		self.__project.configAdded.connect(self.configAdded)
-		self.__project.configRemoved.connect(self.configRemoved)
+			self.__project.configAdded.connect(self.configAdded)
+			self.__project.configRemoved.connect(self.configRemoved)
+
+			#now set some ui
+			filename = self.__project.filename()
+			self.ui.bkgProjectLabel.setText(os.path.basename(os.path.normpath(os.path.dirname(filename))))
+			self.ui.bkgProjectLabel.adjustSize()
+			index =self.__sceneFileModel.setRootPath(os.path.dirname(filename))
+			self.ui.sceneFilesTreeView.setModel(self.__sceneFileModel)
+			self.ui.sceneFilesTreeView.setRootIndex(index)
+			self.ui.sceneFilesTreeView.setColumnHidden(2, True)
+			self.ui.sceneFilesTreeView.setColumnWidth(0, 256)
+			self.ui.sceneFilesTreeView.setColumnWidth(1, 64)
 
 	def setConfig(self, config):  # all UI is driven by model callbacks after config is set
 		'''
@@ -278,10 +296,6 @@ class HoudiniPane(BaseLauncherPane):
 				self.ui.projectPathLine.setText(os.path.dirname(self.__project.filename()))
 				return
 		finally:
-			if(self.__project is not None):
-				filename=self.__project.filename()
-				self.ui.bkgProjectLabel.setText(os.path.basename(os.path.normpath(os.path.dirname(filename))))
-				self.ui.bkgProjectLabel.adjustSize()
 			self.__projectPathChangedInProgress = False
 
 	@Slot(int)
