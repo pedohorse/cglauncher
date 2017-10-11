@@ -67,6 +67,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.__sceneFileModel.setNameFilters(["*.hip","*.hipnc"])
 		#self.__sceneFileModel.setFilter(QDir.Files | QDir.Dirs | QDir.NoDotAndDotDot)
 		self.__sceneFileModel.setNameFilterDisables(False)
+		self.ui.sceneFilesTreeView.doubleClicked.connect(self.sceneFileTreeDoubleClicked)
 
 
 		# self.ui.envTableView.setModel(EnvTableModel())
@@ -172,9 +173,7 @@ class HoudiniPane(BaseLauncherPane):
 
 	# UI callbacks
 
-
-	@Slot()
-	def launchButtonPressed(self):
+	def launch(self, extraattribs=None):
 		conf = self.__project.config(self.ui.configComboBox.currentText())
 		if (conf is None):
 			print("failed to obtain config")
@@ -203,7 +202,24 @@ class HoudiniPane(BaseLauncherPane):
 			env[str(name)] = str(val) #just so no unicode
 		print(filepath)
 		pprint(env)
-		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=os.path.dirname(filepath))
+		if(extraattribs is not None):
+			assert isinstance(extraattribs,tuple) or isinstance(extraattribs,list), 'extra attributes must be either list or tuple'
+			filepath=[filepath]+list(extraattribs)
+		print(filepath)
+		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env)#, cwd=os.path.dirname(filepath))
+
+	@Slot()
+	def sceneFileTreeDoubleClicked(self,index):
+		try:
+			filepath=self.__sceneFileModel.filePath(index)
+		except:
+			print("internal error")
+			return
+		self.launch([filepath])
+
+	@Slot()
+	def launchButtonPressed(self):
+		self.launch()
 
 	@Slot()
 	def projectDialogSelected(self):
