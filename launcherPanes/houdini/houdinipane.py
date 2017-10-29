@@ -202,11 +202,12 @@ class HoudiniPane(BaseLauncherPane):
 			env[str(name)] = str(val) #just so no unicode
 		print(filepath)
 		pprint(env)
+		basedir=os.path.dirname(filepath)
 		if(extraattribs is not None):
 			assert isinstance(extraattribs,tuple) or isinstance(extraattribs,list), 'extra attributes must be either list or tuple'
 			filepath=[filepath]+list(extraattribs)
 		print(filepath)
-		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env)#, cwd=os.path.dirname(filepath))
+		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=basedir)
 
 	@Slot()
 	def sceneFileTreeDoubleClicked(self,index):
