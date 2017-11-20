@@ -2,9 +2,18 @@ import os
 import subprocess
 import re
 
+import platform
+
 
 def locateHoudinies(extraPathList=None):
-	commonpaths = [r"C:\Program Files\Side Effects Software",r"/opt",r"/Applications"]
+
+	system=platform.system()
+	if(system=='Windows'):
+		commonpaths = [r"C:\Program Files\Side Effects Software"]
+	elif(system=='Linux'):
+		commonpaths = [r"/opt"]
+	else:
+		raise RuntimeError("looks like someone purposefully deleted you OS from jedi archives...")
 	if(extraPathList is not None):commonpaths+=extraPathList
 
 	houdinies = {}
@@ -16,7 +25,11 @@ def locateHoudinies(extraPathList=None):
 			continue
 
 		for dir in dirs:
-			match = re.match(r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d{3,}))?", dir)
+			if (system == 'Windows'):
+				matchexpr=r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d{3,}))?"
+			elif(system == 'Linux'):
+				matchexpr = r"hfs(\d+)(\.(\d))(\.(\d{3,}))" #we want full versions, not links or shortcuts
+			match = re.match(matchexpr, dir)
 			if (not match): continue
 			cver = (int(match.group(1)), 0 if match.group(3) == "" else int(match.group(3)), 9999 if match.group(5) == "" else int(match.group(5)))
 			houdinies[cver] = os.path.join(path, dir)
@@ -57,6 +70,7 @@ def getClosestVersion(ver=(),houdinies=None):
 	return sortvers[0][1]
 
 
+# THIS IS NOT USED AND BROKEN THEREFORE HAVE TO BE EITHER FIXED OR DELETED, OR WHY NOT BOTH
 def launchHoudini(ver=(), hsite=None, job=None):
 	os.environ["JOB"] = r"c:\temp"
 	if (not (hsite is None) and isinstance(hsite, str)):
