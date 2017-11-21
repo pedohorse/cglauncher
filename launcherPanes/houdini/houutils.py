@@ -12,6 +12,9 @@ def locateHoudinies(extraPathList=None):
 		commonpaths = [r"C:\Program Files\Side Effects Software"]
 	elif(system=='Linux'):
 		commonpaths = [r"/opt"]
+	elif(system=='Darwin'):
+		#/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
+		commonpaths = ["r/Applications/Houdini"]
 	else:
 		raise RuntimeError("looks like someone purposefully deleted you OS from jedi archives...")
 	if(extraPathList is not None):commonpaths+=extraPathList
@@ -26,13 +29,18 @@ def locateHoudinies(extraPathList=None):
 
 		for dir in dirs:
 			if (system == 'Windows'):
-				matchexpr=r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d{3,}))?"
+				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d{3,}))?"
 			elif(system == 'Linux'):
 				matchexpr = r"hfs(\d+)(\.(\d))(\.(\d{3,}))" #we want full versions, not links or shortcuts
+			elif(system == 'Darwin'):
+				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))(\.(\d{3,}))"
 			match = re.match(matchexpr, dir)
 			if (not match): continue
 			cver = (int(match.group(1)), 0 if match.group(3) == "" else int(match.group(3)), 9999 if match.group(5) == "" else int(match.group(5)))
-			houdinies[cver] = os.path.join(path, dir)
+			if(system=='Windows' or system=='Linux'):
+				houdinies[cver] = os.path.join(path, dir)
+			elif(system=='Darwin'):
+				houdinies[cver] = os.path.join(path, dir,'Frameworks','Houdini.framework','Version',"%s.%s.%s"%cver,'Resources')
 
 	return houdinies
 
