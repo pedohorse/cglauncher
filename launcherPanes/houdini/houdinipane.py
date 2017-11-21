@@ -197,6 +197,8 @@ class HoudiniPane(BaseLauncherPane):
 		for i in xrange(conf.rowCount() - 1):
 			name = conf.data(conf.index(i, 0))
 			val = conf.data(conf.index(i, 1))
+			#now replace ; with current os's pathseparator
+			val = val.replace(';',os.pathsep)
 			if (name == ''): continue
 			val = re.sub(r'\[(\S+)\]',lambda match:envtokendict[match.group(1)] if match.group(1) in envtokendict else '',val)
 			env[str(name)] = str(val) #just so no unicode
