@@ -98,6 +98,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.renameConfigPushButton.clicked.connect(self.renameConfigButtonPressed)
 		self.ui.delConfigPushButton.clicked.connect(self.configRemoveButtonPressed)
 		self.ui.launchPushButton.clicked.connect(self.launchButtonPressed)
+		self.ui.launchPushButton.customContextMenuRequested.connect(self.launchButtonRightClicked)
 
 		self.ui.projectPathLine.editingFinished.connect(self.projectPathChanged)
 		self.ui.saveProjectPushButton.clicked.connect(self.saveProjectButtonPressed)
@@ -235,6 +236,38 @@ class HoudiniPane(BaseLauncherPane):
 	@Slot()
 	def launchButtonPressed(self):
 		self.launch()
+
+	@Slot()
+	def launchButtonRightClicked(self,pos):
+		wid=self.sender()
+		menu = QMenu("what to do", self)
+		action = menu.addAction("create a launcher script for current config")
+		action.setData([0, None])
+
+
+		menu.triggered.connect(self.launchMenuTriggered)
+		menu.popup(wid.mapToGlobal(pos))
+		menu.aboutToHide.connect(menu.deleteLater)
+
+	@Slot()
+	def launchMenuTriggered(self,action):
+		actionid=action.data()[0]
+		if(actionid==0):
+			if(self.__project is None or self.__project.filename() is None):return
+			conf = self.__project.config(self.ui.configComboBox.currentText())
+			if (conf is None):
+				print("failed to obtain config")
+				return
+
+			env={}
+			for i in xrange(conf.rowCount() - 1):
+				env[conf.data(conf.index(i, 0))]=conf.data(conf.index(i, 1))
+
+			code=houutils.launcherCodeTemplate(conf.houVer(),conf.otherData('binary'),env,None, os.path.basename(os.path.normpath(os.path.dirname(self.__project.filename()))),conf.name())
+			with open(os.path.join(os.path.dirname(self.__project.filename()),'launcher.py'),'w') as f:
+				f.write(code)
+
+
 
 	@Slot()
 	def projectDialogSelected(self):

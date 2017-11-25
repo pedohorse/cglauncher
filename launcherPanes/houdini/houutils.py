@@ -3,6 +3,7 @@ import subprocess
 import re
 
 import platform
+import inspect
 
 
 def locateHoudinies(extraPathList=None):
@@ -76,6 +77,65 @@ def getClosestVersion(ver=(),houdinies=None):
 
 
 	return sortvers[0][1]
+
+
+def launcherCodeTemplate(verTuple,bin,envDict=None,extraAttribs=None,projectName='',configName=''):
+	if(not isinstance(verTuple,tuple)):verTuple=tuple(verTuple)
+	if(not isinstance(bin,str)):bin=str(bin)
+	code="# The following code was generated automatically by the cgLauncher\n\n"
+	code+=\
+'''import os
+import subprocess
+import re
+import platform
+import time
+
+'''
+	code+=inspect.getsource(locateHoudinies)
+	code+=inspect.getsource(getClosestVersion)
+	code+="\n\n"
+
+	code+=\
+'''def launch():
+	hous=locateHoudinies()
+	binpath=os.path.join(os.path.join(hous[getClosestVersion({0},hous)],'bin'),"{1}")
+	arglist=[binpath]
+'''.format(str(verTuple),bin)
+	if(extraAttribs is not None):
+		code+='''\
+	arglist+=list({0})
+'''.format(extraAttribs)
+
+	#set environment
+	if(envDict is not None):
+		code+='''\
+	envtokendict={ 'PWD':os.getcwd() }
+'''
+		for env in envDict:
+			if(env==''):continue
+			code+='''\
+	val = re.sub(r'\[(\S+)\]',lambda match:envtokendict[match.group(1)] if match.group(1) in envtokendict else '',"{1}")
+	val = val.replace(';',os.pathsep)
+	os.environ["{0}"] = val
+'''.format(str(env),str(envDict[env]))
+
+	code+='''\
+	subprocess.Popen(arglist, stdin=None, stdout=None, stderr=None)
+'''
+
+	code+='''\
+
+print("This launcher was automatically generated from project '{0}' configuration '{1}' by cgLauncher")
+print("------------------------------------------------------------------------------------------")
+launch()
+print("Launcher finished\\n\\nYou may close this window or it will close itself in 5 seconds")
+time.sleep(5)
+'''.format(projectName,configName)
+	return code
+	#print(code)
+
+
+
 
 
 # THIS IS NOT USED AND BROKEN THEREFORE HAVE TO BE EITHER FIXED OR DELETED, OR WHY NOT BOTH

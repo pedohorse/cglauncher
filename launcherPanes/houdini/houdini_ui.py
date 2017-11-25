@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'houdini.ui'
 #
-# Created: Tue Oct 10 22:11:16 2017
+# Created: Sat Nov 25 14:50:29 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -100,6 +100,7 @@ class Ui_houdiniMenu(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.launchPushButton.sizePolicy().hasHeightForWidth())
         self.launchPushButton.setSizePolicy(sizePolicy)
+        self.launchPushButton.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.launchPushButton.setObjectName("launchPushButton")
         self.gridLayout.addWidget(self.launchPushButton, 0, 1, 1, 1)
         self.label = QtGui.QLabel(houdiniMenu)
