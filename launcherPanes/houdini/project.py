@@ -21,6 +21,7 @@ class Project(QObject):
 	# signals
 	configAdded = Signal(ProjectConfig)
 	configRemoved = Signal(str)
+	filenameChanged = Signal(str)
 
 	__currentFormatVersion=(1,0)
 	__projectTemplateStr=json.dumps({'formatVersion':list(__currentFormatVersion)},indent=4)
@@ -111,6 +112,7 @@ class Project(QObject):
 		'''
 		self.__projectFileName=filename
 		self.__saveNeeded=self.__projectFileName is not None
+		self.filenameChanged.emit(filename)
 
 	def __loadFromFile(self,filename):
 		with open(filename,'r') as f:

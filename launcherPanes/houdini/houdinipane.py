@@ -119,7 +119,10 @@ class HoudiniPane(BaseLauncherPane):
 			try:
 				self.__project.configAdded.disconnect(self.configAdded)  #
 				self.__project.configRemoved.disconnect(self.configRemoved)  #
+				self.__project.filenameChanged.disconnect(self.updateTreeView)
 			# TOTO:figure out why disconnect sometimes doesnt work
+			# I think i figured out, but now i dont remember what was that
+			# as i recall - something with pyqt signal-slots actually only supporting limited subset of only default types, so if you Slot from your type - it won't find that slot after
 			except Exception as e:
 				print("Pane: strange error during disconnecting: %s"%e.message)
 			#self.__project.deleteLater()
@@ -133,17 +136,26 @@ class HoudiniPane(BaseLauncherPane):
 
 			self.__project.configAdded.connect(self.configAdded)
 			self.__project.configRemoved.connect(self.configRemoved)
+			self.__project.filenameChanged.connect(self.updateTreeView)
+			# now set some ui #TODO: in some cases during new project's creation setProject may be not called, but this shit has to be updated still. DO
+			self.updateTreeView()
 
-			#now set some ui
-			filename = self.__project.filename()
-			self.ui.bkgProjectLabel.setText(os.path.basename(os.path.normpath(os.path.dirname(filename))))
-			self.ui.bkgProjectLabel.adjustSize()
-			index =self.__sceneFileModel.setRootPath(os.path.dirname(filename))
-			self.ui.sceneFilesTreeView.setModel(self.__sceneFileModel)
-			self.ui.sceneFilesTreeView.setRootIndex(index)
-			self.ui.sceneFilesTreeView.setColumnHidden(2, True)
-			self.ui.sceneFilesTreeView.setColumnWidth(0, 256)
-			self.ui.sceneFilesTreeView.setColumnWidth(1, 64)
+	def updateTreeView(self,dirname=None):
+		if(dirname is None):
+			if(self.__project is None):raise RuntimeError("Tree view cannot be updated - cuz there's no project")
+			dirname = os.path.dirname(self.__project.filename())
+		else:
+			if(not os.path.isdir(dirname)):
+				dirname=os.path.dirname(os.path.normpath(dirname))
+
+		self.ui.bkgProjectLabel.setText(os.path.basename(os.path.normpath(dirname)))
+		self.ui.bkgProjectLabel.adjustSize()
+		index =self.__sceneFileModel.setRootPath(dirname)
+		self.ui.sceneFilesTreeView.setModel(self.__sceneFileModel)
+		self.ui.sceneFilesTreeView.setRootIndex(index)
+		self.ui.sceneFilesTreeView.setColumnHidden(2, True)
+		self.ui.sceneFilesTreeView.setColumnWidth(0, 256)
+		self.ui.sceneFilesTreeView.setColumnWidth(1, 64)
 
 	def setConfig(self, config):  # all UI is driven by model callbacks after config is set
 		'''
