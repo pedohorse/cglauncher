@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'houdini.ui'
 #
-# Created: Tue Oct 10 22:11:16 2017
+# Created: Sun Nov 26 12:47:31 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,46 +24,6 @@ class Ui_houdiniMenu(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.sceneFilesTreeView = QtGui.QTreeView(houdiniMenu)
-        self.sceneFilesTreeView.setStyleSheet("QTreeView{\n"
-"    background-color: rgba(0,0,0,0)\n"
-"}\n"
-"\n"
-"QHeaderView::section\n"
-"{\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"            stop: 0.0 rgba(58, 58, 58, 128), \n"
-"            stop: 1.0 rgba(38, 38, 38, 128) );\n"
-"}\n"
-"\n"
-"QHeaderView\n"
-"{\n"
-"    background: rgba(0,0,0,0)\n"
-"}")
-        self.sceneFilesTreeView.setLineWidth(1)
-        self.sceneFilesTreeView.setSortingEnabled(True)
-        self.sceneFilesTreeView.setObjectName("sceneFilesTreeView")
-        self.gridLayout.addWidget(self.sceneFilesTreeView, 5, 1, 1, 1)
-        self.horizontalLayout = QtGui.QHBoxLayout()
-        self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.projectPathLine = QtGui.QLineEdit(houdiniMenu)
-        self.projectPathLine.setFocusPolicy(QtCore.Qt.ClickFocus)
-        self.projectPathLine.setFrame(True)
-        self.projectPathLine.setObjectName("projectPathLine")
-        self.horizontalLayout.addWidget(self.projectPathLine)
-        self.projectPathPushButton = QtGui.QPushButton(houdiniMenu)
-        self.projectPathPushButton.setMaximumSize(QtCore.QSize(32, 16777215))
-        self.projectPathPushButton.setObjectName("projectPathPushButton")
-        self.horizontalLayout.addWidget(self.projectPathPushButton)
-        self.saveProjectPushButton = QtGui.QPushButton(houdiniMenu)
-        self.saveProjectPushButton.setObjectName("saveProjectPushButton")
-        self.horizontalLayout.addWidget(self.saveProjectPushButton)
-        self.gridLayout.addLayout(self.horizontalLayout, 1, 1, 1, 1)
-        self.paneVersionLabel = QtGui.QLabel(houdiniMenu)
-        self.paneVersionLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.paneVersionLabel.setObjectName("paneVersionLabel")
-        self.gridLayout.addWidget(self.paneVersionLabel, 1, 2, 1, 1)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.houVersionComboBox = QtGui.QComboBox(houdiniMenu)
@@ -86,6 +46,10 @@ class Ui_houdiniMenu(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.gridLayout.addLayout(self.horizontalLayout_2, 3, 1, 1, 1)
+        self.paneVersionLabel = QtGui.QLabel(houdiniMenu)
+        self.paneVersionLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.paneVersionLabel.setObjectName("paneVersionLabel")
+        self.gridLayout.addWidget(self.paneVersionLabel, 1, 2, 1, 1)
         self.paneLogo = QtGui.QLabel(houdiniMenu)
         self.paneLogo.setMinimumSize(QtCore.QSize(128, 128))
         self.paneLogo.setMaximumSize(QtCore.QSize(128, 128))
@@ -94,17 +58,47 @@ class Ui_houdiniMenu(object):
         self.paneLogo.setScaledContents(True)
         self.paneLogo.setObjectName("paneLogo")
         self.gridLayout.addWidget(self.paneLogo, 0, 2, 1, 1)
-        self.launchPushButton = QtGui.QPushButton(houdiniMenu)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.launchPushButton.sizePolicy().hasHeightForWidth())
-        self.launchPushButton.setSizePolicy(sizePolicy)
-        self.launchPushButton.setObjectName("launchPushButton")
-        self.gridLayout.addWidget(self.launchPushButton, 0, 1, 1, 1)
+        self.sceneFilesTreeView = QtGui.QTreeView(houdiniMenu)
+        self.sceneFilesTreeView.setStyleSheet("QTreeView{\n"
+"    background-color: rgba(0,0,0,0)\n"
+"}\n"
+"\n"
+"QHeaderView::section\n"
+"{\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"            stop: 0.0 rgba(58, 58, 58, 128), \n"
+"            stop: 1.0 rgba(38, 38, 38, 128) );\n"
+"}\n"
+"\n"
+"QHeaderView\n"
+"{\n"
+"    background: rgba(0,0,0,0)\n"
+"}")
+        self.sceneFilesTreeView.setLineWidth(1)
+        self.sceneFilesTreeView.setSortingEnabled(True)
+        self.sceneFilesTreeView.setObjectName("sceneFilesTreeView")
+        self.gridLayout.addWidget(self.sceneFilesTreeView, 5, 1, 1, 1)
         self.label = QtGui.QLabel(houdiniMenu)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.projectPathLine = QtGui.QLineEdit(houdiniMenu)
+        self.projectPathLine.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.projectPathLine.setFrame(True)
+        self.projectPathLine.setObjectName("projectPathLine")
+        self.horizontalLayout.addWidget(self.projectPathLine)
+        self.projectPathPushButton = QtGui.QPushButton(houdiniMenu)
+        self.projectPathPushButton.setMaximumSize(QtCore.QSize(32, 16777215))
+        self.projectPathPushButton.setObjectName("projectPathPushButton")
+        self.horizontalLayout.addWidget(self.projectPathPushButton)
+        self.saveProjectPushButton = QtGui.QPushButton(houdiniMenu)
+        self.saveProjectPushButton.setObjectName("saveProjectPushButton")
+        self.horizontalLayout.addWidget(self.saveProjectPushButton)
+        self.gridLayout.addLayout(self.horizontalLayout, 1, 1, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem1, 4, 1, 1, 1)
         self.houVersionLabel = QtGui.QLabel(houdiniMenu)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -154,16 +148,38 @@ class Ui_houdiniMenu(object):
 "}")
         self.delConfigPushButton.setObjectName("delConfigPushButton")
         self.horizontalLayout_3.addWidget(self.delConfigPushButton)
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem1)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem2)
         self.horizontalLayout_3.setStretch(0, 1)
         self.horizontalLayout_3.setStretch(4, 1)
         self.gridLayout.addLayout(self.horizontalLayout_3, 2, 1, 1, 1)
         self.configLabel = QtGui.QLabel(houdiniMenu)
         self.configLabel.setObjectName("configLabel")
         self.gridLayout.addWidget(self.configLabel, 2, 0, 1, 1)
-        spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem2, 4, 1, 1, 1)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.launchPushButton = QtGui.QPushButton(houdiniMenu)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.launchPushButton.sizePolicy().hasHeightForWidth())
+        self.launchPushButton.setSizePolicy(sizePolicy)
+        self.launchPushButton.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.launchPushButton.setObjectName("launchPushButton")
+        self.horizontalLayout_5.addWidget(self.launchPushButton)
+        self.launchOptionsPushButton = QtGui.QPushButton(houdiniMenu)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.launchOptionsPushButton.sizePolicy().hasHeightForWidth())
+        self.launchOptionsPushButton.setSizePolicy(sizePolicy)
+        self.launchOptionsPushButton.setMaximumSize(QtCore.QSize(16, 16777215))
+        self.launchOptionsPushButton.setText("v")
+        self.launchOptionsPushButton.setObjectName("launchOptionsPushButton")
+        self.horizontalLayout_5.addWidget(self.launchOptionsPushButton)
+        self.horizontalLayout_5.setStretch(0, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_5, 0, 1, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem3)
@@ -192,20 +208,20 @@ class Ui_houdiniMenu(object):
 
     def retranslateUi(self, houdiniMenu):
         houdiniMenu.setWindowTitle(QtGui.QApplication.translate("houdiniMenu", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.projectPathPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveProjectPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "save", None, QtGui.QApplication.UnicodeUTF8))
-        self.paneVersionLabel.setText(QtGui.QApplication.translate("houdiniMenu", "v 0.1", None, QtGui.QApplication.UnicodeUTF8))
         self.binNameComboBox.setItemText(0, QtGui.QApplication.translate("houdiniMenu", "hmaster", None, QtGui.QApplication.UnicodeUTF8))
         self.binNameComboBox.setItemText(1, QtGui.QApplication.translate("houdiniMenu", "houdinifx", None, QtGui.QApplication.UnicodeUTF8))
         self.binNameComboBox.setItemText(2, QtGui.QApplication.translate("houdiniMenu", "houdini", None, QtGui.QApplication.UnicodeUTF8))
         self.binNameComboBox.setItemText(3, QtGui.QApplication.translate("houdiniMenu", "houdinicore", None, QtGui.QApplication.UnicodeUTF8))
-        self.launchPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "Launch!", None, QtGui.QApplication.UnicodeUTF8))
+        self.paneVersionLabel.setText(QtGui.QApplication.translate("houdiniMenu", "v 0.1", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("houdiniMenu", "Proect Location:   ", None, QtGui.QApplication.UnicodeUTF8))
+        self.projectPathPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveProjectPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "save", None, QtGui.QApplication.UnicodeUTF8))
         self.houVersionLabel.setText(QtGui.QApplication.translate("houdiniMenu", "Houdini Version:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.newConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "new", None, QtGui.QApplication.UnicodeUTF8))
         self.renameConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "rename", None, QtGui.QApplication.UnicodeUTF8))
         self.delConfigPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "del", None, QtGui.QApplication.UnicodeUTF8))
         self.configLabel.setText(QtGui.QApplication.translate("houdiniMenu", "Configuration  :", None, QtGui.QApplication.UnicodeUTF8))
+        self.launchPushButton.setText(QtGui.QApplication.translate("houdiniMenu", "Launch!", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("houdiniMenu", "environment variables", None, QtGui.QApplication.UnicodeUTF8))
 
 import houdini_rc

@@ -98,6 +98,8 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.renameConfigPushButton.clicked.connect(self.renameConfigButtonPressed)
 		self.ui.delConfigPushButton.clicked.connect(self.configRemoveButtonPressed)
 		self.ui.launchPushButton.clicked.connect(self.launchButtonPressed)
+		self.ui.launchPushButton.customContextMenuRequested.connect(self.launchButtonRightClicked)
+		self.ui.launchOptionsPushButton.clicked.connect(self.launcherOptionsButtonClocked)
 
 		self.ui.projectPathLine.editingFinished.connect(self.projectPathChanged)
 		self.ui.saveProjectPushButton.clicked.connect(self.saveProjectButtonPressed)
@@ -235,6 +237,46 @@ class HoudiniPane(BaseLauncherPane):
 	@Slot()
 	def launchButtonPressed(self):
 		self.launch()
+
+	@Slot(bool)
+	def launcherOptionsButtonClocked(self):
+		sender = self.sender()
+		pos = sender.parent().mapToGlobal(sender.geometry().bottomLeft())
+		self.createLaunchOptionsMenu(pos)
+
+	@Slot()
+	def launchButtonRightClicked(self,pos=None):
+		self.createLaunchOptionsMenu(self.sender().mapToGlobal(pos))
+
+	def createLaunchOptionsMenu(self,globalPos):
+		menu = QMenu("what to do", self)
+		action = menu.addAction("create a launcher script for current config")
+		action.setData([0, None])
+		menu.triggered.connect(self.launchMenuTriggered)
+		menu.popup(globalPos)
+		menu.aboutToHide.connect(menu.deleteLater)
+
+	@Slot()
+	def launchMenuTriggered(self,action):
+		actionid=action.data()[0]
+		if(actionid==0):
+			if(self.__project is None or self.__project.filename() is None):
+				QMessageBox.warning(self,"error","failed to create launcher script\nfailed to obtain project's file location")
+				return
+			conf = self.__project.config(self.ui.configComboBox.currentText())
+			if (conf is None):
+				QMessageBox.warning(self, "error", "failed to create launcher script\nfailed to obtain configuration")
+				return
+
+			env={}
+			for i in xrange(conf.rowCount() - 1):
+				env[conf.data(conf.index(i, 0))]=conf.data(conf.index(i, 1))
+
+			code=houutils.launcherCodeTemplate(conf.houVer(),conf.otherData('binary'),env,None, os.path.basename(os.path.normpath(os.path.dirname(self.__project.filename()))),conf.name())
+			with open(os.path.join(os.path.dirname(self.__project.filename()),'launcher.py'),'w') as f:
+				f.write(code)
+			QMessageBox.information(self, "Success", "launcher.py was created in the project's folder")
+
 
 	@Slot()
 	def projectDialogSelected(self):

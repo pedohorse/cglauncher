@@ -3,8 +3,10 @@ import subprocess
 import re
 
 import platform
+import inspect
 
 
+#/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
 def locateHoudinies(extraPathList=None):
 
 	system=platform.system()
@@ -13,7 +15,6 @@ def locateHoudinies(extraPathList=None):
 	elif(system=='Linux'):
 		commonpaths = [r"/opt"]
 	elif(system=='Darwin'):
-		#/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
 		commonpaths = ["r/Applications/Houdini"]
 	else:
 		raise RuntimeError("looks like someone purposefully deleted you OS from jedi archives...")
@@ -76,6 +77,77 @@ def getClosestVersion(ver=(),houdinies=None):
 
 
 	return sortvers[0][1]
+
+
+def launcherCodeTemplate(verTuple,bin,envDict=None,extraAttribs=None,projectName='',configName=''):
+	if(not isinstance(verTuple,tuple)):verTuple=tuple(verTuple)
+	if(not isinstance(bin,str)):bin=str(bin)
+	code =  "# The following code was generated automatically by the cgLauncher\n"
+	code += "# https://github.com/pedohorse/cglauncher\n"
+	code += "# ----------------------------------------------------------------\n\n"
+	code+=\
+'''import os
+import subprocess
+import re
+import platform
+import time
+
+'''
+	code+=inspect.getsource(locateHoudinies)
+	code+=inspect.getsource(getClosestVersion)
+	code+="\n\n"
+
+	code+=\
+'''def launch():
+	hous=locateHoudinies()
+	binpath=os.path.join(os.path.join(hous[getClosestVersion({0},hous)],'bin'),"{1}")
+	arglist=[binpath]
+'''.format(str(verTuple),bin)
+	if(extraAttribs is not None):
+		code+='''\
+	arglist+=list({0})
+	print("Additional arguments are set to %s"%str(list({0})))
+'''.format(extraAttribs)
+
+	#set environment
+	if(envDict is not None):
+		code+='''\
+	print("Setting up environment variables...")
+	envtokendict={ 'PWD':os.getcwd() }
+'''
+		for env in envDict:
+			if(env==''):continue
+			code+='''\
+	val = re.sub(r'\[(\S+)\]',lambda match:envtokendict[match.group(1)] if match.group(1) in envtokendict else '',"{1}")
+	val = val.replace(';',os.pathsep)
+	os.environ["{0}"] = val
+	print("{0} is set to %s"%val)
+'''.format(str(env),str(envDict[env]))
+	code+='''\
+	print("Environment setup is done!\\n")
+'''
+	code+='''\
+	print("Launching: %s"%arglist[0])
+	subprocess.Popen(arglist, stdin=None, stdout=None, stderr=None)
+'''
+
+	code+='''\
+
+print("This launcher was automatically generated from project '{0}' configuration '{1}' by cgLauncher")
+print("------------------------------------------------------------------------------------------")
+try:
+	launch()
+	print("Launcher finished\\n\\nYou may close this window or it will close itself in 5 seconds")
+	time.sleep(5)
+except Exception as e:
+	print("ERROR OCCURED!!!\\n%s\\n\\n"%e.message)
+	raw_input("Press enter to close the window...")
+'''.format(projectName,configName)
+	return code
+	#print(code)
+
+
+
 
 
 # THIS IS NOT USED AND BROKEN THEREFORE HAVE TO BE EITHER FIXED OR DELETED, OR WHY NOT BOTH
