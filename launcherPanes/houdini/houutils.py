@@ -6,6 +6,7 @@ import platform
 import inspect
 
 
+#/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
 def locateHoudinies(extraPathList=None):
 
 	system=platform.system()
@@ -14,7 +15,6 @@ def locateHoudinies(extraPathList=None):
 	elif(system=='Linux'):
 		commonpaths = [r"/opt"]
 	elif(system=='Darwin'):
-		#/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
 		commonpaths = ["r/Applications/Houdini"]
 	else:
 		raise RuntimeError("looks like someone purposefully deleted you OS from jedi archives...")
@@ -82,7 +82,9 @@ def getClosestVersion(ver=(),houdinies=None):
 def launcherCodeTemplate(verTuple,bin,envDict=None,extraAttribs=None,projectName='',configName=''):
 	if(not isinstance(verTuple,tuple)):verTuple=tuple(verTuple)
 	if(not isinstance(bin,str)):bin=str(bin)
-	code="# The following code was generated automatically by the cgLauncher\n\n"
+	code =  "# The following code was generated automatically by the cgLauncher\n"
+	code += "# https://github.com/pedohorse/cglauncher\n"
+	code += "# ----------------------------------------------------------------\n\n"
 	code+=\
 '''import os
 import subprocess
