@@ -104,11 +104,13 @@ import time
 	if(extraAttribs is not None):
 		code+='''\
 	arglist+=list({0})
+	print("Additional arguments are set to %s"%str(list({0})))
 '''.format(extraAttribs)
 
 	#set environment
 	if(envDict is not None):
 		code+='''\
+	print("Setting up environment variables...")
 	envtokendict={ 'PWD':os.getcwd() }
 '''
 		for env in envDict:
@@ -117,9 +119,13 @@ import time
 	val = re.sub(r'\[(\S+)\]',lambda match:envtokendict[match.group(1)] if match.group(1) in envtokendict else '',"{1}")
 	val = val.replace(';',os.pathsep)
 	os.environ["{0}"] = val
+	print("{0} is set to %s"%val)
 '''.format(str(env),str(envDict[env]))
-
 	code+='''\
+	print("Environment setup is done!\\n")
+'''
+	code+='''\
+	print("Launching: %s"%arglist[0])
 	subprocess.Popen(arglist, stdin=None, stdout=None, stderr=None)
 '''
 
@@ -127,9 +133,13 @@ import time
 
 print("This launcher was automatically generated from project '{0}' configuration '{1}' by cgLauncher")
 print("------------------------------------------------------------------------------------------")
-launch()
-print("Launcher finished\\n\\nYou may close this window or it will close itself in 5 seconds")
-time.sleep(5)
+try:
+	launch()
+	print("Launcher finished\\n\\nYou may close this window or it will close itself in 5 seconds")
+	time.sleep(5)
+except Exception as e:
+	print("ERROR OCCURED!!!\\n%s\\n\\n"%e.message)
+	raw_input("Press enter to close the window...")
 '''.format(projectName,configName)
 	return code
 	#print(code)
