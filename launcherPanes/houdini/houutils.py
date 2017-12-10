@@ -30,11 +30,11 @@ def locateHoudinies(extraPathList=None):
 
 		for dir in dirs:
 			if (system == 'Windows'):
-				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d{3,}))?"
+				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))?(\.(\d+))?"
 			elif(system == 'Linux'):
-				matchexpr = r"hfs(\d+)(\.(\d))(\.(\d{3,}))" #we want full versions, not links or shortcuts
+				matchexpr = r"hfs(\d+)(\.(\d))(\.(\d+))" #we want full versions, not links or shortcuts
 			elif(system == 'Darwin'):
-				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))(\.(\d{3,}))"
+				matchexpr = r"[Hh]oudini ?(\d+)(\.(\d))(\.(\d+))"
 			match = re.match(matchexpr, dir)
 			if (not match): continue
 			cver = (int(match.group(1)), 0 if match.group(3) == "" else int(match.group(3)), 9999 if match.group(5) == "" else int(match.group(5)))
