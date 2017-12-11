@@ -154,7 +154,7 @@ class Project(QObject):
 
 class ProjectConfig(QAbstractTableModel):
 	otherDataChanged=Signal(dict)
-	__currentFormatVersion = (1, 0)
+	__currentFormatVersion = (1, 1)
 
 	def __init__(self, name=None, ver=None, valuesDict=None):
 		super(ProjectConfig, self).__init__()
@@ -162,7 +162,7 @@ class ProjectConfig(QAbstractTableModel):
 		if(name is not None and ver is None or name is None and ver is not None or valuesDict is not None and (name is not None or ver is not None)):raise RuntimeError("either give name and ver, or valuesDict")
 
 		self.__data=[]
-		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default'}
+		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default','args':[]}
 		self.__formatVersion = ProjectConfig.__currentFormatVersion
 		if(ver is not None):self.setOtherData('ver',ver) #TODO: make more readable, cuz now it looks like there's a possibility for ver not to be set, but it's not
 		if(name is not None):self.setOtherData('name',name)
@@ -178,9 +178,9 @@ class ProjectConfig(QAbstractTableModel):
 			self.__data=valuesData['env']+[] #to copy data
 
 			#TODO: maybe in analogue with dataSerialize - just shove in all unprocessed keys?
-			self.setOtherData('name',valuesData['name'])
-			self.setOtherData('ver',tuple(valuesData['version']))
-			self.setOtherData('binary',valuesData['binary'])
+			for key in valuesData.keys():
+				if(key == 'env' or key == 'formatVersion'): continue
+				self.setOtherData(key, valuesData[key])
 		except KeyError as e:
 			raise RuntimeError("Config: Couldn't load config: unknown key %s"%(e.message,))
 		finally:
@@ -197,9 +197,10 @@ class ProjectConfig(QAbstractTableModel):
 		res['env']=self.__data+[] #TO COPY
 
 		#TODO: replace with: for key in self.__otherData:res[key]=self.__otherData[key]
-		res['name'] = self.otherData('name')
-		res['version']=self.otherData('ver')
-		res['binary']=self.otherData('binary')
+		for key in self.otherData.keys():
+			if (key == 'env' or key == 'formatVersion'): continue
+			res[key] = self.otherData(key)
+
 		return res
 
 #Get/Set stuff
