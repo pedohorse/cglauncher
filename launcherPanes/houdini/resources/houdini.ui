@@ -369,7 +369,14 @@ QHeaderView
       </spacer>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="commandLineArgsLineEdit"/>
+      <widget class="QLineEdit" name="commandLineArgsLineEdit">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit
+{
+    background: rgba(0,0,0,64)
+}</string>
+       </property>
+      </widget>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="commandLineLabel">

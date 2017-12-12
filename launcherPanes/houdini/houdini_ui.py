@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'houdini.ui'
 #
-# Created: Tue Dec 12 09:08:56 2017
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+# Created: Tue Dec 12 12:37:25 2017
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -181,6 +181,10 @@ class Ui_houdiniMenu(object):
         spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem2, 5, 1, 1, 1)
         self.commandLineArgsLineEdit = QtGui.QLineEdit(houdiniMenu)
+        self.commandLineArgsLineEdit.setStyleSheet("QLineEdit\n"
+"{\n"
+"    background: rgba(0,0,0,64)\n"
+"}")
         self.commandLineArgsLineEdit.setObjectName("commandLineArgsLineEdit")
         self.gridLayout.addWidget(self.commandLineArgsLineEdit, 4, 1, 1, 1)
         self.commandLineLabel = QtGui.QLabel(houdiniMenu)
