@@ -94,6 +94,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.configComboBox.currentIndexChanged[str].connect(self.configSelected)
 		self.ui.houVersionComboBox.currentIndexChanged[int].connect(self.uiHouVerChanged)
 		self.ui.binNameComboBox.editTextChanged.connect(self.binaryChanged)
+		self.ui.commandLineArgsLineEdit.editingFinished.connect(self.argumentsChanged)
 		self.ui.newConfigPushButton.clicked.connect(self.newConfigButtonPressed)
 		self.ui.renameConfigPushButton.clicked.connect(self.renameConfigButtonPressed)
 		self.ui.delConfigPushButton.clicked.connect(self.configRemoveButtonPressed)
@@ -305,6 +306,9 @@ class HoudiniPane(BaseLauncherPane):
 			if('name' in keys):
 				data = dictdata['name']
 				self.ui.configComboBox.setItemText(self.ui.configComboBox.currentIndex(),data)
+			if('args' in keys):
+				data = dictdata['args']
+				self.ui.commandLineArgsLineEdit.setText(data)
 		finally:
 			self.__blockUICallbacks = False
 
@@ -373,6 +377,7 @@ class HoudiniPane(BaseLauncherPane):
 
 	@Slot(int)
 	def uiHouVerChanged(self, id):
+		#TODO: Think of some more robust way to get current config. What if say change config sigal is and this one are connected with QueuedConnection? then it's possible we first change the config and then apply these changes to the new config, not old one
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
 		conf.setOtherData('ver', tuple(self.ui.houVersionComboBox.itemData(id)))
@@ -382,6 +387,12 @@ class HoudiniPane(BaseLauncherPane):
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
 		conf.setOtherData('binary', text)
+
+	@Slot(str)
+	def argumentsChanged(self,text):
+		if (self.__blockUICallbacks): return
+		conf = self.__project.config(self.ui.configComboBox.currentText())
+		conf.setOtherData('args',text)
 
 #	# Buttons Callbacks
 	@Slot()
