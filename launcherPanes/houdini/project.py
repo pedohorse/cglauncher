@@ -162,7 +162,7 @@ class ProjectConfig(QAbstractTableModel):
 		if(name is not None and ver is None or name is None and ver is not None or valuesDict is not None and (name is not None or ver is not None)):raise RuntimeError("either give name and ver, or valuesDict")
 
 		self.__data=[]
-		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default','args':[]}
+		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default','args':''}
 		self.__formatVersion = ProjectConfig.__currentFormatVersion
 		if(ver is not None):self.setOtherData('ver',ver) #TODO: make more readable, cuz now it looks like there's a possibility for ver not to be set, but it's not
 		if(name is not None):self.setOtherData('name',name)
