@@ -220,9 +220,18 @@ class HoudiniPane(BaseLauncherPane):
 		print(filepath)
 		pprint(env)
 		basedir=os.path.dirname(filepath)
+
+		#attributes
+		attribs=self.ui.commandLineArgsLineEdit.text()
+		if(attribs!=''):
+			attrlist=re.findall(r'([^\s"]+|"[^"]*")(?:\s|$)+',attribs)
+			if (isinstance(filepath, str)): filepath = [filepath]
+			filepath += attrlist
+
 		if(extraattribs is not None):
 			assert isinstance(extraattribs,tuple) or isinstance(extraattribs,list), 'extra attributes must be either list or tuple'
-			filepath=[filepath]+list(extraattribs)
+			if(isinstance(filepath,str)):filepath=[filepath]
+			filepath+=list(extraattribs)
 		print(filepath)
 		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=basedir)
 
@@ -388,11 +397,11 @@ class HoudiniPane(BaseLauncherPane):
 		conf = self.__project.config(self.ui.configComboBox.currentText())
 		conf.setOtherData('binary', text)
 
-	@Slot(str)
-	def argumentsChanged(self,text):
+	@Slot()
+	def argumentsChanged(self):
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
-		conf.setOtherData('args',text)
+		conf.setOtherData('args',self.ui.commandLineArgsLineEdit.text())
 
 #	# Buttons Callbacks
 	@Slot()
