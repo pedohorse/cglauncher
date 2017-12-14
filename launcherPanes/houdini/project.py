@@ -180,7 +180,9 @@ class ProjectConfig(QAbstractTableModel):
 			#TODO: maybe in analogue with dataSerialize - just shove in all unprocessed keys?
 			for key in valuesData.keys():
 				if(key == 'env' or key == 'formatVersion'): continue
-				self.setOtherData(key, valuesData[key])
+				data=valuesData[key]
+				if(key=='ver'):data=tuple(data)
+				self.setOtherData(key, data)
 		except KeyError as e:
 			raise RuntimeError("Config: Couldn't load config: unknown key %s"%(e.message,))
 		finally:
@@ -197,7 +199,7 @@ class ProjectConfig(QAbstractTableModel):
 		res['env']=self.__data+[] #TO COPY
 
 		#TODO: replace with: for key in self.__otherData:res[key]=self.__otherData[key]
-		for key in self.otherData.keys():
+		for key in self.__otherData.keys():
 			if (key == 'env' or key == 'formatVersion'): continue
 			res[key] = self.otherData(key)
 
