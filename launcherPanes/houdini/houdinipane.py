@@ -300,8 +300,8 @@ class HoudiniPane(BaseLauncherPane):
 		# if u want any UI-to-model callbacks to happen - think twice and modify model directly
 		try:
 			keys = dictdata.keys()
-			if ('ver' in keys):
-				data = dictdata['ver']
+			if ('version' in keys):
+				data = dictdata['version']
 				# houfound = False
 				for i in xrange(self.ui.houVersionComboBox.count()):
 					if (data == tuple(self.ui.houVersionComboBox.itemData(i))):
@@ -389,7 +389,7 @@ class HoudiniPane(BaseLauncherPane):
 		#TODO: Think of some more robust way to get current config. What if say change config sigal is and this one are connected with QueuedConnection? then it's possible we first change the config and then apply these changes to the new config, not old one
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
-		conf.setOtherData('ver', tuple(self.ui.houVersionComboBox.itemData(id)))
+		conf.setOtherData('version', tuple(self.ui.houVersionComboBox.itemData(id)))
 
 	@Slot(str)
 	def binaryChanged(self, text):

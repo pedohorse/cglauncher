@@ -162,9 +162,9 @@ class ProjectConfig(QAbstractTableModel):
 		if(name is not None and ver is None or name is None and ver is not None or valuesDict is not None and (name is not None or ver is not None)):raise RuntimeError("either give name and ver, or valuesDict")
 
 		self.__data=[]
-		self.__otherData={'binary':'hmaster','ver':(0,0,0),'name':'default','args':''}
+		self.__otherData={'binary':'hmaster','version':(0,0,0),'name':'default','args':''}
 		self.__formatVersion = ProjectConfig.__currentFormatVersion
-		if(ver is not None):self.setOtherData('ver',ver) #TODO: make more readable, cuz now it looks like there's a possibility for ver not to be set, but it's not
+		if(ver is not None):self.setOtherData('version',ver) #TODO: make more readable, cuz now it looks like there's a possibility for ver not to be set, but it's not
 		if(name is not None):self.setOtherData('name',name)
 
 		if (valuesDict is not None): self.__loadFromData(valuesDict)
@@ -181,7 +181,7 @@ class ProjectConfig(QAbstractTableModel):
 			for key in valuesData.keys():
 				if(key == 'env' or key == 'formatVersion'): continue
 				data=valuesData[key]
-				if(key=='ver'):data=tuple(data)
+				if(key=='version'):data=tuple(data)
 				self.setOtherData(key, data)
 		except KeyError as e:
 			raise RuntimeError("Config: Couldn't load config: unknown key %s"%(e.message,))
@@ -213,7 +213,7 @@ class ProjectConfig(QAbstractTableModel):
 		return self.__otherData[dataName]
 
 	def setOtherData(self,dataName,dataVal):
-		if(dataName=='ver'):
+		if(dataName=='version'):
 			if (not isinstance(dataVal, tuple) or len(dataVal) != 3): raise TypeError("version must be a 3 int tuple")
 		self.__otherData[dataName]=dataVal
 		self.otherDataChanged.emit({dataName:dataVal})
@@ -228,7 +228,7 @@ class ProjectConfig(QAbstractTableModel):
 
 	def houVer(self):
 		''' shortcut to otherData '''
-		return self.otherData('ver')
+		return self.otherData('version')
 
 #QAbstractModel implementation
 	def rowCount(self, parent=None):
