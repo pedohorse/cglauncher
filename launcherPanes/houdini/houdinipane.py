@@ -45,6 +45,7 @@ class HoudiniConfig(QObject):
 
 
 class HoudiniPane(BaseLauncherPane):
+	attribParseRegex=r'([^\s"]+|"[^"]*")(?:\s|$)+'
 	def __init__(self, parent=None):
 		super(HoudiniPane, self).__init__(parent)
 		self.__blockUICallbacks = False
@@ -224,7 +225,7 @@ class HoudiniPane(BaseLauncherPane):
 		#attributes
 		attribs=self.ui.commandLineArgsLineEdit.text()
 		if(attribs!=''):
-			attrlist=re.findall(r'([^\s"]+|"[^"]*")(?:\s|$)+',attribs)
+			attrlist=re.findall(HoudiniPane.attribParseRegex,attribs)
 			if (isinstance(filepath, str)): filepath = [filepath]
 			filepath += attrlist
 
@@ -285,7 +286,7 @@ class HoudiniPane(BaseLauncherPane):
 			attribs = self.ui.commandLineArgsLineEdit.text()
 			attrlist = None
 			if (attribs != ''):
-				attrlist = re.findall(r'([^\s"]+|"[^"]*")(?:\s|$)+', attribs) #TODO: link this re to the one in launch method
+				attrlist = re.findall(HoudiniPane.attribParseRegex, attribs)
 			code=houutils.launcherCodeTemplate(conf.houVer(),conf.otherData('binary'), env, attrlist, os.path.basename(os.path.normpath(os.path.dirname(self.__project.filename()))),conf.name())
 			with open(os.path.join(os.path.dirname(self.__project.filename()),'launcher.py'),'w') as f:
 				f.write(code)
