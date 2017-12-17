@@ -34,6 +34,41 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="2">
+      <widget class="QLabel" name="paneVersionLabel">
+       <property name="text">
+        <string>v 0.1</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="paneLogo">
+       <property name="minimumSize">
+        <size>
+         <width>128</width>
+         <height>128</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>128</width>
+         <height>128</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="houdini.qrc">:/icons/houdini/houlogo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
@@ -94,125 +129,6 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="paneVersionLabel">
-       <property name="text">
-        <string>v 0.1</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="paneLogo">
-       <property name="minimumSize">
-        <size>
-         <width>128</width>
-         <height>128</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>128</width>
-         <height>128</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="houdini.qrc">:/icons/houdini/houlogo.png</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QTreeView" name="sceneFilesTreeView">
-       <property name="styleSheet">
-        <string notr="true">QTreeView{
-	background-color: rgba(0,0,0,0)
-}
-
-QHeaderView::section
-{
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-			stop: 0.0 rgba(58, 58, 58, 128), 
-			stop: 1.0 rgba(38, 38, 38, 128) );
-}
-
-QHeaderView
-{
-    background: rgba(0,0,0,0)
-}</string>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Proect Location:   </string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLineEdit" name="projectPathLine">
-         <property name="focusPolicy">
-          <enum>Qt::ClickFocus</enum>
-         </property>
-         <property name="frame">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="projectPathPushButton">
-         <property name="maximumSize">
-          <size>
-           <width>32</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="saveProjectPushButton">
-         <property name="text">
-          <string>save</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="1">
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item row="3" column="0">
       <widget class="QLabel" name="houVersionLabel">
        <property name="sizePolicy">
@@ -223,6 +139,13 @@ QHeaderView
        </property>
        <property name="text">
         <string>Houdini Version:  </string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Proect Location:   </string>
        </property>
       </widget>
      </item>
@@ -319,6 +242,70 @@ QHeaderView
        </item>
       </layout>
      </item>
+     <item row="6" column="1">
+      <widget class="QTreeView" name="sceneFilesTreeView">
+       <property name="styleSheet">
+        <string notr="true">QTreeView{
+	background-color: rgba(0,0,0,0)
+}
+
+QHeaderView::section
+{
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+			stop: 0.0 rgba(58, 58, 58, 128), 
+			stop: 1.0 rgba(38, 38, 38, 128) );
+}
+
+QHeaderView
+{
+    background: rgba(0,0,0,0)
+}</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="projectPathLine">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="projectPathPushButton">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="saveProjectPushButton">
+         <property name="text">
+          <string>save</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="configLabel">
        <property name="text">
@@ -367,6 +354,36 @@ QHeaderView
         </widget>
        </item>
       </layout>
+     </item>
+     <item row="5" column="1">
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="commandLineArgsLineEdit">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit
+{
+    background: rgba(0,0,0,64)
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="commandLineLabel">
+       <property name="text">
+        <string>Arguments:</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

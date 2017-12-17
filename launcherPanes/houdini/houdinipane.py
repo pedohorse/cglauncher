@@ -45,6 +45,7 @@ class HoudiniConfig(QObject):
 
 
 class HoudiniPane(BaseLauncherPane):
+	attribParseRegex=r'([^\s"]+|"[^"]*")(?:\s|$)+'
 	def __init__(self, parent=None):
 		super(HoudiniPane, self).__init__(parent)
 		self.__blockUICallbacks = False
@@ -94,6 +95,7 @@ class HoudiniPane(BaseLauncherPane):
 		self.ui.configComboBox.currentIndexChanged[str].connect(self.configSelected)
 		self.ui.houVersionComboBox.currentIndexChanged[int].connect(self.uiHouVerChanged)
 		self.ui.binNameComboBox.editTextChanged.connect(self.binaryChanged)
+		self.ui.commandLineArgsLineEdit.editingFinished.connect(self.argumentsChanged)
 		self.ui.newConfigPushButton.clicked.connect(self.newConfigButtonPressed)
 		self.ui.renameConfigPushButton.clicked.connect(self.renameConfigButtonPressed)
 		self.ui.delConfigPushButton.clicked.connect(self.configRemoveButtonPressed)
@@ -219,9 +221,18 @@ class HoudiniPane(BaseLauncherPane):
 		print(filepath)
 		pprint(env)
 		basedir=os.path.dirname(filepath)
+
+		#attributes
+		attribs=self.ui.commandLineArgsLineEdit.text()
+		if(attribs!=''):
+			attrlist=re.findall(HoudiniPane.attribParseRegex,attribs)
+			if (isinstance(filepath, str)): filepath = [filepath]
+			filepath += attrlist
+
 		if(extraattribs is not None):
 			assert isinstance(extraattribs,tuple) or isinstance(extraattribs,list), 'extra attributes must be either list or tuple'
-			filepath=[filepath]+list(extraattribs)
+			if(isinstance(filepath,str)):filepath=[filepath]
+			filepath+=list(extraattribs)
 		print(filepath)
 		subprocess.Popen(filepath, stdin=None, stdout=None, stderr=None, env=env, cwd=basedir)
 
@@ -272,7 +283,11 @@ class HoudiniPane(BaseLauncherPane):
 			for i in xrange(conf.rowCount() - 1):
 				env[conf.data(conf.index(i, 0))]=conf.data(conf.index(i, 1))
 
-			code=houutils.launcherCodeTemplate(conf.houVer(),conf.otherData('binary'),env,None, os.path.basename(os.path.normpath(os.path.dirname(self.__project.filename()))),conf.name())
+			attribs = self.ui.commandLineArgsLineEdit.text()
+			attrlist = None
+			if (attribs != ''):
+				attrlist = re.findall(HoudiniPane.attribParseRegex, attribs)
+			code=houutils.launcherCodeTemplate(conf.houVer(),conf.otherData('binary'), env, attrlist, os.path.basename(os.path.normpath(os.path.dirname(self.__project.filename()))),conf.name())
 			with open(os.path.join(os.path.dirname(self.__project.filename()),'launcher.py'),'w') as f:
 				f.write(code)
 			QMessageBox.information(self, "Success", "launcher.py was created in the project's folder")
@@ -290,8 +305,8 @@ class HoudiniPane(BaseLauncherPane):
 		# if u want any UI-to-model callbacks to happen - think twice and modify model directly
 		try:
 			keys = dictdata.keys()
-			if ('ver' in keys):
-				data = dictdata['ver']
+			if ('version' in keys):
+				data = dictdata['version']
 				# houfound = False
 				for i in xrange(self.ui.houVersionComboBox.count()):
 					if (data == tuple(self.ui.houVersionComboBox.itemData(i))):
@@ -305,6 +320,9 @@ class HoudiniPane(BaseLauncherPane):
 			if('name' in keys):
 				data = dictdata['name']
 				self.ui.configComboBox.setItemText(self.ui.configComboBox.currentIndex(),data)
+			if('args' in keys):
+				data = dictdata['args']
+				self.ui.commandLineArgsLineEdit.setText(data)
 		finally:
 			self.__blockUICallbacks = False
 
@@ -373,15 +391,22 @@ class HoudiniPane(BaseLauncherPane):
 
 	@Slot(int)
 	def uiHouVerChanged(self, id):
+		#TODO: Think of some more robust way to get current config. What if say change config sigal is and this one are connected with QueuedConnection? then it's possible we first change the config and then apply these changes to the new config, not old one
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
-		conf.setOtherData('ver', tuple(self.ui.houVersionComboBox.itemData(id)))
+		conf.setOtherData('version', tuple(self.ui.houVersionComboBox.itemData(id)))
 
 	@Slot(str)
 	def binaryChanged(self, text):
 		if (self.__blockUICallbacks): return
 		conf = self.__project.config(self.ui.configComboBox.currentText())
 		conf.setOtherData('binary', text)
+
+	@Slot()
+	def argumentsChanged(self):
+		if (self.__blockUICallbacks): return
+		conf = self.__project.config(self.ui.configComboBox.currentText())
+		conf.setOtherData('args',self.ui.commandLineArgsLineEdit.text())
 
 #	# Buttons Callbacks
 	@Slot()
