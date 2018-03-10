@@ -209,7 +209,9 @@ class HoudiniPane(BaseLauncherPane):
 		filepath = os.path.join(filepath, 'bin', filename)
 		# now set env
 		env = os.environ.copy()
-		envtokendict={'PWD':os.path.dirname(self.__project.filename())}
+		envtokendict={};
+		envtokendict=os.environ.copy();
+		envtokendict.update({'PWD':os.path.dirname(self.__project.filename())})
 		for i in xrange(conf.rowCount() - 1):
 			name = conf.data(conf.index(i, 0))
 			val = conf.data(conf.index(i, 1))
