@@ -1,9 +1,9 @@
 import os
 
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide2.QtCore import *
+from PySide2.QtWidgets import *
 
-import projectDialog_ui
+from . import projectDialog_ui
 
 import json
 
@@ -13,7 +13,7 @@ from pprint import pprint
 class ProjectListModel(QAbstractListModel):
 	def __init__(self,basename,parent):
 		super(ProjectListModel,self).__init__(parent)
-		self.__settingsfile = os.path.join(QDesktopServices.storageLocation(QDesktopServices.DataLocation), '.'.join((basename,'projectlist')))
+		self.__settingsfile = os.path.join(QStandardPaths.writableLocation(QStandardPaths.DataLocation), '.'.join((basename, 'projectlist')))
 		self.__data=[]
 		try:
 			with open(self.__settingsfile,"r") as f:
@@ -76,7 +76,7 @@ class ProjectDialog(QDialog):
 
 		self.ui=projectDialog_ui.Ui_projectSelectionDialog()
 		self.ui.setupUi(self)
-		self.setWindowFlags(Qt.Popup)
+		self.setWindowFlags(Qt.Tool)
 
 		self.__fileModel=QFileSystemModel(self)
 		self.__fileModel.setRootPath(QDir.currentPath())
@@ -114,10 +114,12 @@ class ProjectDialog(QDialog):
 		self.hide()
 
 	@Slot(QPoint)
-	def folderRightClicked(self,pos):
+	def folderRightClicked(self, pos):
+		print(pos)
 		#supposed to be connected to QAbstractView
 		wid=self.sender()
 		index=wid.indexAt(pos)
+		print(index.data())
 		if(index.isValid()):
 			menu=QMenu("what to do",self)
 			if(wid==self.ui.fileTreeView):
@@ -130,7 +132,7 @@ class ProjectDialog(QDialog):
 				action.setData([10, index])
 
 			menu.triggered.connect(self.folderMenuTriggered)
-			menu.popup(wid.mapToGlobal(pos))
+			menu.popup(wid.viewport().mapToGlobal(pos))
 			menu.aboutToHide.connect(menu.deleteLater)
 
 	@Slot(QAction)
@@ -169,12 +171,16 @@ class ProjectDialog(QDialog):
 			event.accept()
 
 #TESTING
-if(__name__=='__main__'):
+if __name__=='__main__':
 	import sys
 	qapp = QApplication(sys.argv)
 	qapp.setApplicationName("CGlauncher")
-	settingspath=QDesktopServices.storageLocation(QDesktopServices.DataLocation)
-	if(not os.path.exists(settingspath)):os.makedirs(settingspath)
+	settingspath = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
+	if not settingspath:
+		print('settings path cannot be determined... wierd')
+		sys.exit(1)
+	if not os.path.exists(settingspath):
+		os.makedirs(settingspath)
 
 	w = ProjectDialog()
 	w.accepted.connect(lambda:pprint(w.chosenPath()))

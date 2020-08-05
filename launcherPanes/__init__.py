@@ -1,17 +1,17 @@
-#this will have a list of available plugins
+# this will have a list of available plugins
 import os
 import importlib
+import traceback
 import inspect
 
 import re
 
-from baselauncherpane import BaseLauncherPane
+from .baselauncherpane import BaseLauncherPane
 
+pluginClassList = []
+pluginModuleList = []
+__all__ = []
 
-
-
-pluginClassList=[]
-pluginModuleList=[]
 
 def rescanPlugins():
 	global pluginClassList
@@ -19,24 +19,24 @@ def rescanPlugins():
 	global __all__
 	pluginClassList = []
 	pluginModuleList = []
-	thisdir=os.path.dirname(__file__)
-	ls=os.listdir(thisdir)
-	files=[os.path.splitext(x)[0] for x in ls if os.path.splitext(x)[1]==".py" and x!="__init__.py" and x!='baselauncherpane.py' and not re.match(r'.+(_rc)|(_ui)$',os.path.splitext(x)[0])]
-	dirs=[x for x in ls if os.path.exists(os.path.join(thisdir,x,'__init__.py'))]
+	thisdir = os.path.dirname(__file__)
+	ls = os.listdir(thisdir)
+	files = [os.path.splitext(x)[0] for x in ls if os.path.splitext(x)[1] == ".py" and x != "__init__.py" and x != 'baselauncherpane.py' and not re.match(r'.+(_rc)|(_ui)$', os.path.splitext(x)[0])]
+	dirs = [x for x in ls if os.path.exists(os.path.join(thisdir, x, '__init__.py'))]
 
-	for fn in files+dirs:
+	for fn in files + dirs:
 		try:
-			newmodule=importlib.import_module(".".join((__name__,fn)))
-			reload(newmodule)
+			newmodule = importlib.import_module(".".join((__name__, fn)))
+			importlib.reload(newmodule)
 		except Exception as e:
-			print("Launcher Panes: failed to load module %s"%fn)
-			print("cuz: %s"%e.message)
+			print("Launcher Panes: failed to load module %s" % fn)
+			print("cuz: %s" % str(e))
+			traceback.print_exc()
 			continue
-		for name,obj in inspect.getmembers(newmodule):
-			if(inspect.isclass(obj) and BaseLauncherPane in inspect.getmro(obj)[1:]):
+		for name, obj in inspect.getmembers(newmodule):
+			if inspect.isclass(obj) and BaseLauncherPane in inspect.getmro(obj)[1:]:
 				pluginModuleList.append(newmodule)
 				pluginClassList.append(obj)
-
 
 
 rescanPlugins()

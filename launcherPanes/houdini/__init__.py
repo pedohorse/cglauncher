@@ -1,1 +1,1 @@
-from houdinipane import HoudiniPane
+from .houdinipane import HoudiniPane

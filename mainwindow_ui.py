@@ -1,58 +1,77 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
-#
-# Created: Sun Sep 24 19:19:07 2017
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
-#
-# WARNING! All changes made in this file will be lost!
+################################################################################
+## Form generated from reading UI file 'mainwindow.ui'
+##
+## Created by: Qt User Interface Compiler version 5.14.2
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
 
-from PySide import QtCore, QtGui
+from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
+    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
+from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
+    QPixmap, QRadialGradient)
+from PySide2.QtWidgets import *
+
+import res_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        if not MainWindow.objectName():
+            MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(847, 730)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon = QIcon()
+        icon.addFile(u":/icons/icon.ico", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
-        self.centralwidget = QtGui.QWidget(MainWindow)
-        self.centralwidget.setMinimumSize(QtCore.QSize(20, 20))
-        self.centralwidget.setObjectName("centralwidget")
-        self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+        self.centralwidget.setMinimumSize(QSize(20, 20))
+        self.horizontalLayout = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.horizontalLayout.setContentsMargins(9, -1, -1, -1)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.sideBarLayout = QtGui.QVBoxLayout()
+        self.sideBarLayout = QVBoxLayout()
         self.sideBarLayout.setSpacing(0)
-        self.sideBarLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
-        self.sideBarLayout.setObjectName("sideBarLayout")
-        self.frame = QtGui.QFrame(self.centralwidget)
-        self.frame.setFrameShape(QtGui.QFrame.Panel)
-        self.frame.setFrameShadow(QtGui.QFrame.Sunken)
-        self.frame.setObjectName("frame")
-        self.verticalLayout = QtGui.QVBoxLayout(self.frame)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.buttonsLayout = QtGui.QVBoxLayout()
-        self.buttonsLayout.setObjectName("buttonsLayout")
+        self.sideBarLayout.setObjectName(u"sideBarLayout")
+        self.sideBarLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.frame = QFrame(self.centralwidget)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.Panel)
+        self.frame.setFrameShadow(QFrame.Sunken)
+        self.verticalLayout = QVBoxLayout(self.frame)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.buttonsLayout = QVBoxLayout()
+        self.buttonsLayout.setObjectName(u"buttonsLayout")
+
         self.verticalLayout.addLayout(self.buttonsLayout)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+
         self.sideBarLayout.addWidget(self.frame)
+
+
         self.horizontalLayout.addLayout(self.sideBarLayout)
+
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 847, 21))
-        self.menubar.setObjectName("menubar")
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 847, 21))
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
+        self.statusbar = QStatusBar(MainWindow)
+        self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        QMetaObject.connectSlotsByName(MainWindow)
+    # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+    # retranslateUi
 
-import res_rc
