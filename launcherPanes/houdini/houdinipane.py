@@ -312,11 +312,14 @@ class HoudiniPane(BaseLauncherPane):
 			if 'version' in keys:
 				data = dictdata['version']
 				# houfound = False
-				for i in range(self.ui.houVersionComboBox.count()):
-					if data == tuple(self.ui.houVersionComboBox.itemData(i)):
-						self.ui.houVersionComboBox.setCurrentIndex(i)
-						# houfound = True
-						break
+				closestversion = houutils.getClosestVersion(data)
+				closestversion_text = '.'.join(str(x) for x in closestversion)
+				vid = self.ui.houVersionComboBox.findText(closestversion_text)
+				if vid == -1:
+					print('somehow version list is incomplete, adding')
+					self.ui.houVersionComboBox.addItem(closestversion_text)
+					vid = self.ui.houVersionComboBox.count() - 1
+				self.ui.houVersionComboBox.setCurrentIndex(vid)
 					# if (not houfound): return
 			if 'binary' in keys:
 				data = dictdata['binary']
