@@ -5,6 +5,7 @@ import re
 import platform
 import inspect
 
+from typing import Optional, List
 
 #/Applications/Houdini/Houdini16.0.628/Frameworks/Houdini.framework/Versions/16.0.628/Resources/bin/houdinifx
 def locateHoudinies(extraPathList=None):
@@ -48,7 +49,7 @@ def locateHoudinies(extraPathList=None):
 	return houdinies
 
 
-def getClosestVersion(ver=(), houdinies=None):  # TODO: optimize, this was done by me when i didnt know about tuple comparison
+def getClosestVersion(ver: tuple = (), houdinies: Optional[List[tuple]] = None) -> tuple:  # TODO: optimize, this was done by me when i didnt know about tuple comparison
 	if len(ver) == 0:
 		ver = (9999, 0, 9999)
 	elif len(ver) == 1:
