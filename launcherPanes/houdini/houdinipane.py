@@ -207,7 +207,7 @@ class HoudiniPane(BaseLauncherPane):
 			elif(len(filenamecandidates)>1):raise RuntimeError('multiple matching files to launch found')
 			filename=filenamecandidates[0]
 		except Exception as e:
-			print("HoudiniPane: launch failed: %s"%e.message)
+			print("HoudiniPane: launch failed: {}".format(str(e)))
 			return
 		filepath = os.path.join(filepath, 'bin', filename)
 		# now set env
@@ -221,8 +221,9 @@ class HoudiniPane(BaseLauncherPane):
 			#now replace ; with current os's pathseparator
 			val = val.replace(';',os.pathsep)
 			if (name == ''): continue
-			val = re.sub(r'\[(\S+)\]',lambda match:envtokendict[match.group(1)] if match.group(1) in envtokendict else '',val)
+			val = re.sub(r'\$\{(\S+)\}|\$(\w+)', lambda match: envtokendict.get(match.group(1) or match.group(2), ''), val)
 			env[str(name)] = str(val) #just so no unicode
+			envtokendict[str(name)] = str(val)
 		print(filepath)
 		pprint(env)
 		basedir=os.path.dirname(filepath)
