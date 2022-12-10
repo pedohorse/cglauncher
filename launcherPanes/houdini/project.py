@@ -22,8 +22,8 @@ class ProjectConfig(QAbstractTableModel):  # forward declaration
 
 class Project(QObject):
 	# signals
-	configAdded = Signal(ProjectConfig)
-	configRemoved = Signal(str)
+	config_added = Signal(ProjectConfig)
+	config_removed = Signal(str)
 	project_file_path_changed = Signal(str)
 
 	__currentFormatVersion = (1, 0)
@@ -77,7 +77,7 @@ class Project(QObject):
 		new_config.dataChanged.connect(self.config_changed)
 		new_config.columnsRemoved.connect(self.config_changed)
 		new_config.columnsInserted.connect(self.config_changed)
-		self.configAdded.emit(new_config)
+		self.config_added.emit(new_config)
 
 	def remove_config(self, name):
 		if name not in self.configs():
@@ -94,7 +94,7 @@ class Project(QObject):
 			self.__configs.remove(x)
 
 		# no deleteLater - let gc do it's job,
-		self.configRemoved.emit(name)
+		self.config_removed.emit(name)
 
 	def configs(self):
 		return [x.name() for x in self.__configs]

@@ -49,7 +49,7 @@ def locateHoudinies(extraPathList=None):
 	return houdinies
 
 
-def getClosestVersion(ver: tuple = (), houdinies: Optional[List[tuple]] = None) -> tuple:  # TODO: optimize, this was done by me when i didnt know about tuple comparison
+def get_closest_version(ver: tuple = (), houdinies: Optional[List[tuple]] = None) -> tuple:  # TODO: optimize, this was done by me when i didnt know about tuple comparison
 	if len(ver) == 0:
 		ver = (9999, 0, 9999)
 	elif len(ver) == 1:
@@ -100,13 +100,13 @@ import time
 
 '''
 	code += inspect.getsource(locateHoudinies)
-	code += inspect.getsource(getClosestVersion)
+	code += inspect.getsource(get_closest_version)
 	code += "\n\n"
 
 	code += \
 '''def launch():
 	hous=locateHoudinies()
-	binpath=os.path.join(os.path.join(hous[getClosestVersion({0},hous)],'bin'),"{1}")
+	binpath=os.path.join(os.path.join(hous[get_closest_version({0},hous)],'bin'),"{1}")
 	arglist=[binpath]
 '''.format(str(verTuple),bin)
 	if extraAttribs is not None:

@@ -7,7 +7,7 @@ class BaseLauncherPane(QWidget):
 	def __init__(self, parent=None):
 		super(BaseLauncherPane, self).__init__(parent)
 
-	def paneHeader(self):
+	def pane_header(self):
 		"""
 		information on the header for sider bar
 		:return: ('text','icon location in resource file ')

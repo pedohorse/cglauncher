@@ -15,7 +15,7 @@ class LauncherWindow(QMainWindow):
 
 		for paneclass in launcherPanes.pluginClassList:
 			pane = paneclass(self)
-			paneName, paneIcon = pane.paneHeader()
+			paneName, paneIcon = pane.pane_header()
 			newheader = QRadioButton(self)
 			newheader.setText(paneName)
 			newheader.setIcon(QIcon(paneIcon))
