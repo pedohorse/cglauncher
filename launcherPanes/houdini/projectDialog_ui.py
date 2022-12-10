@@ -1,39 +1,56 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'projectDialog.ui'
-#
-# Created: Tue Sep 19 21:42:28 2017
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
-#
-# WARNING! All changes made in this file will be lost!
+################################################################################
+## Form generated from reading UI file 'projectDialog.ui'
+##
+## Created by: Qt User Interface Compiler version 5.14.2
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
 
-from PySide import QtCore, QtGui
+from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
+    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
+from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
+    QPixmap, QRadialGradient)
+from PySide2.QtWidgets import *
+
 
 class Ui_projectSelectionDialog(object):
     def setupUi(self, projectSelectionDialog):
-        projectSelectionDialog.setObjectName("projectSelectionDialog")
+        if not projectSelectionDialog.objectName():
+            projectSelectionDialog.setObjectName(u"projectSelectionDialog")
         projectSelectionDialog.resize(669, 463)
         projectSelectionDialog.setModal(False)
-        self.verticalLayout = QtGui.QVBoxLayout(projectSelectionDialog)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.mainlLayout = QtGui.QHBoxLayout()
-        self.mainlLayout.setObjectName("mainlLayout")
-        self.recentProjectsListView = QtGui.QListView(projectSelectionDialog)
-        self.recentProjectsListView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.verticalLayout = QVBoxLayout(projectSelectionDialog)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.mainlLayout = QHBoxLayout()
+        self.mainlLayout.setObjectName(u"mainlLayout")
+        self.recentProjectsListView = QListView(projectSelectionDialog)
+        self.recentProjectsListView.setObjectName(u"recentProjectsListView")
+        self.recentProjectsListView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.recentProjectsListView.setAlternatingRowColors(True)
-        self.recentProjectsListView.setObjectName("recentProjectsListView")
+
         self.mainlLayout.addWidget(self.recentProjectsListView)
-        self.fileTreeView = QtGui.QTreeView(projectSelectionDialog)
-        self.fileTreeView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.fileTreeView.setObjectName("fileTreeView")
+
+        self.fileTreeView = QTreeView(projectSelectionDialog)
+        self.fileTreeView.setObjectName(u"fileTreeView")
+        self.fileTreeView.setContextMenuPolicy(Qt.CustomContextMenu)
+
         self.mainlLayout.addWidget(self.fileTreeView)
+
         self.mainlLayout.setStretch(0, 1)
         self.mainlLayout.setStretch(1, 4)
+
         self.verticalLayout.addLayout(self.mainlLayout)
 
+
         self.retranslateUi(projectSelectionDialog)
-        QtCore.QMetaObject.connectSlotsByName(projectSelectionDialog)
+
+        QMetaObject.connectSlotsByName(projectSelectionDialog)
+    # setupUi
 
     def retranslateUi(self, projectSelectionDialog):
-        projectSelectionDialog.setWindowTitle(QtGui.QApplication.translate("projectSelectionDialog", "Project Selector", None, QtGui.QApplication.UnicodeUTF8))
+        projectSelectionDialog.setWindowTitle(QCoreApplication.translate("projectSelectionDialog", u"Project Selector", None))
+    # retranslateUi
 

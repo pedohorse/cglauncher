@@ -17,6 +17,3 @@ extendable launcher for common pipeline cg applicatinos (supports only Houdini f
 # contributions
 icon icon.ico is licensed under CC 4.0, created by Steve Lianardo
 
-if you want to support my shit:
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=63U3JWYL6ZRHA)
